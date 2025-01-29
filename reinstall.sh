@@ -2099,8 +2099,8 @@ save_password() {
     # 假如用户运行 alpine live 直接打包硬盘镜像，如果保存了明文密码，则会暴露明文密码，因为 netboot initrd 在里面
     # 通过 --password 传入密码，history 有记录，也会暴露明文密码
     # /reinstall.log 也会暴露明文密码（已处理）
-    if false; then
-        printf '%s' "$password" >>"$dir/password-plaintext"
+    if true; then
+        printf '%s' "$password" >"$dir/password-plaintext"
     fi
 
     echo "$password" >"$dir/password-plaintext"
