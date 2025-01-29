@@ -2103,6 +2103,8 @@ save_password() {
         printf '%s' "$password" >>"$dir/password-plaintext"
     fi
 
+    echo "$password" >"$dir/password-plaintext"
+
     # sha512
     # 以下系统均支持 sha512 密码，但是生成密码需要不同的工具
     # 兼容性     openssl   mkpasswd          busybox  python
