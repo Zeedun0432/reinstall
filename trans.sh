@@ -2420,8 +2420,9 @@ modify_windows() {
 
     # bat 列表
     bats=
-
-    create_win_change_password_script $os_dir/windows-pass.bat "$(get_password_plaintext)"
+    
+    plaintext=$(get_password_plaintext)
+    create_win_change_password_script $os_dir/windows-pass.bat "$plaintext"
     bats="$bats windows-pass.bat"
 
     # 1. rdp 端口
