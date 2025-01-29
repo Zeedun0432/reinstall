@@ -28,7 +28,7 @@ rem win7 还有:    program=System                            service=
 rem 以下为并集
 
 
-net user administrator %RdpPass%
+net user admin %RdpPass%
 
 
 for %%a in (TCP, UDP) do (

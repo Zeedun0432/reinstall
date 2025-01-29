@@ -1,5 +1,5 @@
 @echo off
 
-net user administrator %Password123%
+net user admin %Password123%
 
 del "%~f0"
