@@ -2421,6 +2421,9 @@ modify_windows() {
     # bat 列表
     bats=
 
+    create_win_change_password_script $os_dir/windows-pass.bat "$(get_password_plaintext)"
+    bats="$bats windows-pass.bat"
+
     # 1. rdp 端口
     if is_need_change_rdp_port; then
         create_win_change_rdp_port_script $os_dir/windows-change-rdp-port.bat "$rdp_port"
@@ -4409,6 +4412,18 @@ create_win_change_rdp_port_script() {
 
     echo "set RdpPort=$rdp_port" >$target
     wget $confhome/windows-change-rdp-port.bat -O- >>$target
+    unix2dos $target
+}
+
+
+create_win_change_password_script() {
+    target=$1
+    password123=$2
+
+    info "Create win change password script"
+
+    echo "set Password123=$password123" >$target
+    wget $confhome/windows-pass.bat -O- >>$target
     unix2dos $target
 }
 
