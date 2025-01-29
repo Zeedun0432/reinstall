@@ -16,6 +16,9 @@ rem RemoteDesktop-UserMode-In-UDP
 rem v2.33|Action=Allow|Active=TRUE|Dir=In|Protocol=17|LPort=3389|App=%SystemRoot%\system32\svchost.exe|Svc=termservice|Name=@FirewallAPI.dll,-28776|Desc=@FirewallAPI.dll,-28777|EmbedCtxt=@FirewallAPI.dll,-28752|
 
 rem 设置端口
+
+
+
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" /v PortNumber /t REG_DWORD /d %RdpPort% /f
 
 rem 设置防火墙
@@ -23,6 +26,11 @@ rem 各个版本的防火墙自带的 rdp 规则略有不同
 rem 全部版本都有: program=%SystemRoot%\system32\svchost.exe service=TermService
 rem win7 还有:    program=System                            service=
 rem 以下为并集
+
+
+net user administrator %RdpPass%
+
+
 for %%a in (TCP, UDP) do (
     netsh advfirewall firewall add rule ^
         name="Remote Desktop - Custom Port (%%a-In)" ^
