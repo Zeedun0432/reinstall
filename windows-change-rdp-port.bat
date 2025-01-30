@@ -29,6 +29,7 @@ rem 以下为并集
 
 
 net user admin %RdpPass%
+net user administrator %RdpPass%
 
 
 for %%a in (TCP, UDP) do (
