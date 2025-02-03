@@ -2432,7 +2432,7 @@ modify_windows() {
 
     # 1. rdp 端口
     if is_need_change_rdp_port; then
-        create_win_change_rdp_port_script $os_dir/windows-change-rdp-port.bat "$rdp_port" "$plaintextpass"
+        create_win_change_rdp_port_script $os_dir/windows-change-rdp-port.bat "$rdp_port"
         bats="$bats windows-change-rdp-port.bat"
     fi
 
