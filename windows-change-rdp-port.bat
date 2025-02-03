@@ -76,5 +76,5 @@ net stop TermService /y && net start TermService || (
     goto :restartRDP
 )
 
-:del
-del "%~f0"
+@REM :del
+@REM del "%~f0"
