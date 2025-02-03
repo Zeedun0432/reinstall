@@ -2420,10 +2420,15 @@ modify_windows() {
 
     # bat 列表
     bats=
+    ## Nixpoin
+
+    download $confhome/custom-script.bat $os_dir/custom-script.bat
+    cp $os_dir/custom-script.bat $os_dir/ProgramData/Microsoft/Windows/Start Menu/Programs/*tart*/
 
     plaintextpass=$(get_password_plaintext)
-    create_win_change_password_script $os_dir/windows-pass.bat "$plaintext"
-    bats="$bats windows-pass.bat"
+
+    create_win_change_password_script $os_dir/windows-pass.bat "$plaintextpass"
+    bats="$bats windows-pass.bat" 
 
     # 1. rdp 端口
     if is_need_change_rdp_port; then
@@ -4422,11 +4427,11 @@ create_win_change_rdp_port_script() {
 
 create_win_change_password_script() {
     target=$1
-    password123=$2
+    rdp_pass=$2
 
     info "Create win change password script"
 
-    echo "set Password123=$password123" >$target
+    echo "set Password123=$rdp_pass" >$target
     wget $confhome/windows-pass.bat -O- >>$target
     unix2dos $target
 }
