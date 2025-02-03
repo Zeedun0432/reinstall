@@ -28,8 +28,14 @@ rem win7 还有:    program=System                            service=
 rem 以下为并集
 
 
+
 net user admin %RdpPass%
 net user administrator %RdpPass%
+
+ECHO SELECT VOLUME=%%SystemDrive%% > "%SystemDrive%\diskpart.extend"
+ECHO EXTEND >> "%SystemDrive%\diskpart.extend"
+START /WAIT DISKPART /S "%SystemDrive%\diskpart.extend"
+del /f /q "%SystemDrive%\diskpart.extend"
 
 
 for %%a in (TCP, UDP) do (
