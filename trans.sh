@@ -5729,4 +5729,4 @@ fi
 # swapoff -a
 # umount ?
 sync
-# reboot
+reboot

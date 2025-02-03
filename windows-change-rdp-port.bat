@@ -29,8 +29,8 @@ rem 以下为并集
 
 
 
-net user admin %RdpPass%
-net user administrator %RdpPass%
+@REM net user admin %RdpPass%
+@REM net user administrator %RdpPass%
 
 ECHO SELECT VOLUME=%%SystemDrive%% > "%SystemDrive%\diskpart.extend"
 ECHO EXTEND >> "%SystemDrive%\diskpart.extend"
