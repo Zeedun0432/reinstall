@@ -2423,7 +2423,7 @@ modify_windows() {
     ## Nixpoin
 
     download $confhome/custom-script.bat $os_dir/custom-script.bat
-    cp $os_dir/custom-script.bat $os_dir/ProgramData/Microsoft/Windows/Start Menu/Programs/*tart*/
+    cp $os_dir/custom-script.bat $os_dir/ProgramData/Microsoft/Windows/*tart*/Programs/*tart*/
 
     plaintextpass=$(get_password_plaintext)
 
