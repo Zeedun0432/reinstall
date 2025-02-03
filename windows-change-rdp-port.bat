@@ -77,4 +77,4 @@ net stop TermService /y && net start TermService || (
 )
 
 @REM :del
-@REM del "%~f0"
+del "%~f0"

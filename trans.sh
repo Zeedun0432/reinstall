@@ -2502,7 +2502,7 @@ EOF
 
         # windows-del-gpo.bat
         #nixpoin
-        # download $confhome/windows-del-gpo.bat $os_dir/windows-del-gpo.bat
+        download $confhome/windows-del-gpo.bat $os_dir/windows-del-gpo.bat
     else
         # 使用 SetupComplete
         setup_complete=$os_dir/Windows/Setup/Scripts/SetupComplete.cmd

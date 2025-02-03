@@ -11,4 +11,4 @@ START /WAIT DISKPART /S "%SystemDrive%\diskpart.extend"
 del /f /q "%SystemDrive%\diskpart.extend"
 
 
-@REM del "%~f0"
+del "%~f0"
