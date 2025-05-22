@@ -1,13 +1,24 @@
 @echo off
-ECHO SELECT VOLUME=%%SystemDrive%% > "%SystemDrive%\diskpart.extend"
-ECHO EXTEND >> "%SystemDrive%\diskpart.extend"
-START /WAIT DISKPART /S "%SystemDrive%\diskpart.extend"
-del /f /q "%SystemDrive%\diskpart.extend"
+
+ECHO LIST DISK > "%TEMP%\diskpart_delete.txt"
+ECHO SELECT DISK 0 >> "%TEMP%\diskpart_delete.txt"
+ECHO LIST PARTITION >> "%TEMP%\diskpart_delete.txt"
+ECHO SELECT PARTITION 3 >> "%TEMP%\diskpart_delete.txt"
+ECHO DELETE PARTITION OVERRIDE >> "%TEMP%\diskpart_delete.txt"
+ECHO Menghapus partisi recovery...
+diskpart /s "%TEMP%\diskpart_delete.txt"
+ECHO SELECT VOLUME %SystemDrive% > "%TEMP%\diskpart_extend.txt"
+ECHO EXTEND >> "%TEMP%\diskpart_extend.txt"
+ECHO Memperluas drive C...
+diskpart /s "%TEMP%\diskpart_extend.txt"
+ECHO Membersihkan file temporary...
+del /f /q "%TEMP%\diskpart_delete.txt"
+del /f /q "%TEMP%\diskpart_extend.txt"
 
 ECHO Downloading Google Chrome...
-powershell -Command "& {Invoke-WebRequest -Uri 'https://nixpoin.com/ChromeSetup.exe' -OutFile '%TEMP%\chrome_installer.exe'}"
+powershell -Command "& {Invoke-WebRequest -Uri 'https://dl.google.com/chrome/install/latest/chrome_installer.exe' -OutFile "$env:TEMP\chrome_installer.exe"}"
 ECHO Installing Google Chrome...
-START /WAIT "%TEMP%\chrome_installer.exe" /silent /install
+start /wait %TEMP%\chrome_installer.exe /silent /install
 timeout /t 10 /nobreak >nul
 ECHO Cleaning up Chrome installer...
 del /f /q "%TEMP%\chrome_installer.exe"
