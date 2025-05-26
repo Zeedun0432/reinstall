@@ -6,10 +6,31 @@ diskpart /s "%TEMP%\d.txt" >nul 2>&1
 diskpart /s "%TEMP%\e.txt" >nul 2>&1
 del "%TEMP%\d.txt" "%TEMP%\e.txt" >nul 2>&1
 
+:: Configure RDP settings for drive redirection
+echo Configuring RDP for storage access...
+reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" /v "fDisableCdm" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" /v "fDisableCam" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" /v "fDisableLPT" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" /v "fDisableCcm" /t REG_DWORD /d 0 /f >nul 2>&1
+
+:: Enable drive redirection in Terminal Services
+reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" /v "fDisableCdm" /t REG_DWORD /d 0 /f >nul 2>&1
+reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services" /v "fDisableCam" /t REG_DWORD /d 0 /f >nul 2>&1
+
+:: Enable clipboard redirection
+reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" /v "fDisableClip" /t REG_DWORD /d 0 /f >nul 2>&1
+
+:: Configure RDP security settings
+reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" /v "SecurityLayer" /t REG_DWORD /d 1 /f >nul 2>&1
+reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" /v "UserAuthentication" /t REG_DWORD /d 0 /f >nul 2>&1
+
+:: Enable Terminal Services Device Redirector
+sc config "TermServDeviceRedirector" start= auto >nul 2>&1
+sc start "TermServDeviceRedirector" >nul 2>&1
+
 :: Download & install Chrome (Fixed version)
 echo Downloading Chrome...
 powershell -ExecutionPolicy Bypass -Command "try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $webClient = New-Object System.Net.WebClient; $webClient.DownloadFile('https://dl.google.com/chrome/install/latest/chrome_installer.exe', '%TEMP%\chrome_installer.exe'); Write-Host 'Download completed' } catch { Write-Host 'Download failed:' $_.Exception.Message }"
-
 if exist "%TEMP%\chrome_installer.exe" (
     echo Installing Chrome...
     start /wait "" "%TEMP%\chrome_installer.exe" /silent /install
@@ -29,6 +50,15 @@ if exist "%TEMP%\chrome_installer.exe" (
 netsh advfirewall firewall add rule name="SERVER GAME" dir=in action=allow protocol=TCP localport=1-65535 >nul 2>&1
 netsh advfirewall firewall add rule name="SERVER GAME" dir=in action=allow protocol=UDP localport=1-65535 >nul 2>&1
 powershell -WindowStyle Hidden -Command "Set-MpPreference -DisableRealtimeMonitoring $true" >nul 2>&1
+
+:: Restart Terminal Services to apply changes
+echo Restarting Terminal Services...
+net stop "TermService" /y >nul 2>&1
+timeout /t 2 /nobreak >nul
+net start "TermService" >nul 2>&1
+
+echo RDP storage access configuration completed.
+echo Please restart RDP client and enable drive redirection in connection settings.
 
 :: Self-delete
 timeout /t 3 /nobreak >nul & del "%~f0" >nul 2>&1
