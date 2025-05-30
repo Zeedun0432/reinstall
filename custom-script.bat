@@ -116,6 +116,7 @@ if %errorlevel% equ 0 (
         timeout /t 10 /nobreak >nul
         del "%TEMP%\chrome_installer.exe" 2>nul
         echo     Chrome installation completed.
+        echo     Please Click Enter.
     )
 ) else (
     echo     Chrome installation failed.
