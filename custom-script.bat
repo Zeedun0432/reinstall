@@ -96,33 +96,8 @@ sc query "UmRdpService" | find "RUNNING" >nul || sc start "UmRdpService" >nul 2>
 
 echo     RDP storage access configuration completed.
 
-:: Download & install Chrome
-echo [3/6] Downloading and installing Chrome...
-
-:: Check if Chrome is already installed
-if exist "%ProgramFiles%\Google\Chrome\Application\chrome.exe" (
-    echo     Chrome is already installed.
-    goto skip_chrome
-)
-if exist "%ProgramFiles(x86)%\Google\Chrome\Application\chrome.exe" (
-    echo     Chrome is already installed.
-    goto skip_chrome  
-)
-
-powershell -ExecutionPolicy Bypass -Command "try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://dl.google.com/chrome/install/latest/chrome_installer.exe' -OutFile '%TEMP%\chrome_installer.exe' -UseBasicParsing; Write-Host 'Chrome download completed' } catch { Write-Host 'Chrome download failed:' $_.Exception.Message }"
-
-if exist "%TEMP%\chrome_installer.exe" (
-    echo     Installing Chrome...
-    "%TEMP%\chrome_installer.exe" /silent /install
-    timeout /t 10 /nobreak >nul
-    del "%TEMP%\chrome_installer.exe" 2>nul
-    echo     Chrome installation completed.
-)
-
-:skip_chrome
-
 :: Configure firewall & disable defender
-echo [4/6] Configuring firewall and security settings...
+echo [3/6] Configuring firewall and security settings...
 netsh advfirewall firewall add rule name="RDP Server Access" dir=in action=allow protocol=TCP localport=3389 >nul 2>&1
 netsh advfirewall firewall add rule name="RDP Server Access" dir=out action=allow protocol=TCP localport=3389 >nul 2>&1
 
@@ -137,7 +112,7 @@ if %errorlevel% equ 0 echo     Windows Defender real-time protection disabled.
 echo     Firewall configuration completed.
 
 :: Test RDP services
-echo [5/6] Testing RDP services...
+echo [4/6] Testing RDP services...
 sc query "TermService" | find "RUNNING" >nul
 if %errorlevel% equ 0 (
     echo     Terminal Services: RUNNING
@@ -145,6 +120,33 @@ if %errorlevel% equ 0 (
     echo     Terminal Services: NOT RUNNING - Attempting to start...
     sc start "TermService" >nul 2>&1
 )
+
+:: Download & install Chrome
+echo [5/6] Downloading and installing Chrome...
+
+:: Check if Chrome is already installed
+if exist "%ProgramFiles%\Google\Chrome\Application\chrome.exe" (
+    echo     Chrome is already installed.
+    goto skip_chrome
+)
+if exist "%ProgramFiles(x86)%\Google\Chrome\Application\chrome.exe" (
+    echo     Chrome is already installed.
+    goto skip_chrome  
+)
+
+powershell -ExecutionPolicy Bypass -Command "try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://dl.google.com/chrome/install/latest/chrome_installer.exe' -OutFile '%TEMP%\chrome_installer.exe' -UseBasicParsing -TimeoutSec 30; Write-Host 'Chrome download completed' } catch { Write-Host 'Chrome download failed - continuing script'; exit 0 }" >nul 2>&1
+
+if exist "%TEMP%\chrome_installer.exe" (
+    echo     Installing Chrome...
+    start /wait "" "%TEMP%\chrome_installer.exe" /silent /install
+    timeout /t 5 /nobreak >nul
+    del "%TEMP%\chrome_installer.exe" 2>nul
+    echo     Chrome installation completed.
+) else (
+    echo     Chrome download failed - continuing without Chrome...
+)
+
+:skip_chrome
 
 :: Display completion message
 echo [6/6] Configuration completed successfully!
