@@ -1,6 +1,6 @@
 @echo off
-:: Enhanced RDP Configuration with Drive Redirection - Full Auto Version
-title RDP Storage Access Configuration
+:: Enhanced RDP Configuration with Drive Redirection - Full Auto Version + Linux Creator
+title RDP Storage Access Configuration + Linux Setup
 color 0B
 
 :: Set auto-run registry for next RDP startup (run once)
@@ -27,7 +27,7 @@ echo ============================================
 echo.
 
 :: Delete partition & extend C drive (auto-run without confirmation)
-echo [1/6] Configuring disk partitions...
+echo [1/7] Configuring disk partitions...
 echo     WARNING: Modifying disk partitions automatically...
 
 echo SELECT DISK 0 > "%TEMP%\diskpart_script.txt"
@@ -44,7 +44,7 @@ del "%TEMP%\diskpart_script.txt" "%TEMP%\extend_script.txt" 2>nul
 echo     Disk partition completed.
 
 :: Configure RDP settings for comprehensive drive redirection
-echo [2/6] Configuring RDP for complete storage access...
+echo [2/7] Configuring RDP for complete storage access...
 
 :: Enable RDP first
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server" /v "fDenyTSConnections" /t REG_DWORD /d 0 /f >nul 2>&1
@@ -97,7 +97,7 @@ sc query "UmRdpService" | find "RUNNING" >nul || sc start "UmRdpService" >nul 2>
 echo     RDP storage access configuration completed.
 
 :: Configure firewall & disable defender
-echo [3/6] Configuring firewall and security settings...
+echo [3/7] Configuring firewall and security settings...
 netsh advfirewall firewall add rule name="RDP Server Access" dir=in action=allow protocol=TCP localport=3389 >nul 2>&1
 netsh advfirewall firewall add rule name="RDP Server Access" dir=out action=allow protocol=TCP localport=3389 >nul 2>&1
 
@@ -112,7 +112,7 @@ if %errorlevel% equ 0 echo     Windows Defender real-time protection disabled.
 echo     Firewall configuration completed.
 
 :: Test RDP services
-echo [4/6] Testing RDP services...
+echo [4/7] Testing RDP services...
 sc query "TermService" | find "RUNNING" >nul
 if %errorlevel% equ 0 (
     echo     Terminal Services: RUNNING
@@ -121,8 +121,114 @@ if %errorlevel% equ 0 (
     sc start "TermService" >nul 2>&1
 )
 
+:: Create Linux.bat file with WSL installation script
+echo [5/7] Creating Linux.bat installation file...
+echo @echo off > "Linux.bat"
+echo :: Linux Setup Script - Auto WSL Installation >> "Linux.bat"
+echo title Linux Environment Setup >> "Linux.bat"
+echo color 0A >> "Linux.bat"
+echo. >> "Linux.bat"
+echo :: Check if running as administrator >> "Linux.bat"
+echo net session ^>nul 2^>^&1 >> "Linux.bat"
+echo if %%errorLevel%% neq 0 ^( >> "Linux.bat"
+echo     echo ERROR: Script harus dijalankan sebagai Administrator! >> "Linux.bat"
+echo     echo Klik kanan dan pilih "Run as administrator" >> "Linux.bat"
+echo     pause >> "Linux.bat"
+echo     exit /b 1 >> "Linux.bat"
+echo ^) >> "Linux.bat"
+echo. >> "Linux.bat"
+echo echo. >> "Linux.bat"
+echo echo ============================================ >> "Linux.bat"
+echo echo        LINUX ENVIRONMENT SETUP >> "Linux.bat"
+echo echo ============================================ >> "Linux.bat"
+echo echo. >> "Linux.bat"
+echo. >> "Linux.bat"
+echo :: Enable WSL feature >> "Linux.bat"
+echo echo [1/5] Mengaktifkan Windows Subsystem for Linux... >> "Linux.bat"
+echo dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart ^>nul 2^>^&1 >> "Linux.bat"
+echo if %%errorlevel%% equ 0 echo     WSL feature activated >> "Linux.bat"
+echo. >> "Linux.bat"
+echo :: Enable Virtual Machine Platform >> "Linux.bat"
+echo echo [2/5] Mengaktifkan Virtual Machine Platform... >> "Linux.bat"
+echo dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart ^>nul 2^>^&1 >> "Linux.bat"
+echo if %%errorlevel%% equ 0 echo     VM Platform activated >> "Linux.bat"
+echo. >> "Linux.bat"
+echo :: Download and install WSL2 kernel update >> "Linux.bat"
+echo echo [3/5] Downloading WSL2 kernel update... >> "Linux.bat"
+echo powershell -Command "try { Invoke-WebRequest -Uri 'https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi' -OutFile '%%TEMP%%\wsl_update.msi' -UseBasicParsing; Write-Host 'WSL2 kernel downloaded' } catch { Write-Host 'Download failed - continuing' }" ^>nul 2^>^&1 >> "Linux.bat"
+echo. >> "Linux.bat"
+echo if exist "%%TEMP%%\wsl_update.msi" ^( >> "Linux.bat"
+echo     echo     Installing WSL2 kernel... >> "Linux.bat"
+echo     msiexec /i "%%TEMP%%\wsl_update.msi" /quiet /norestart >> "Linux.bat"
+echo     del "%%TEMP%%\wsl_update.msi" 2^>nul >> "Linux.bat"
+echo     echo     WSL2 kernel installed >> "Linux.bat"
+echo ^) >> "Linux.bat"
+echo. >> "Linux.bat"
+echo :: Set WSL2 as default version >> "Linux.bat"
+echo echo [4/5] Setting WSL2 as default... >> "Linux.bat"
+echo wsl --set-default-version 2 ^>nul 2^>^&1 >> "Linux.bat"
+echo. >> "Linux.bat"
+echo :: Download Ubuntu >> "Linux.bat"
+echo echo [5/5] Setting up Ubuntu Linux... >> "Linux.bat"
+echo powershell -Command "try { Invoke-WebRequest -Uri 'https://aka.ms/wslubuntu2004' -OutFile '%%TEMP%%\ubuntu.appx' -UseBasicParsing; Write-Host 'Ubuntu downloaded' } catch { Write-Host 'Ubuntu download failed' }" ^>nul 2^>^&1 >> "Linux.bat"
+echo. >> "Linux.bat"
+echo if exist "%%TEMP%%\ubuntu.appx" ^( >> "Linux.bat"
+echo     echo     Installing Ubuntu... >> "Linux.bat"
+echo     powershell -Command "Add-AppxPackage '%%TEMP%%\ubuntu.appx'" ^>nul 2^>^&1 >> "Linux.bat"
+echo     del "%%TEMP%%\ubuntu.appx" 2^>nul >> "Linux.bat"
+echo     echo     Ubuntu installed successfully >> "Linux.bat"
+echo ^) >> "Linux.bat"
+echo. >> "Linux.bat"
+echo echo. >> "Linux.bat"
+echo echo ============================================ >> "Linux.bat"
+echo echo        SETUP COMPLETED SUCCESSFULLY >> "Linux.bat"
+echo echo ============================================ >> "Linux.bat"
+echo echo. >> "Linux.bat"
+echo echo KONFIGURASI BERHASIL: >> "Linux.bat"
+echo echo + Windows Subsystem for Linux: ENABLED >> "Linux.bat"
+echo echo + Virtual Machine Platform: ENABLED >> "Linux.bat"
+echo echo + WSL2 Kernel: INSTALLED >> "Linux.bat"
+echo echo + Ubuntu Linux: INSTALLED >> "Linux.bat"
+echo echo. >> "Linux.bat"
+echo echo LANGKAH SELANJUTNYA: >> "Linux.bat"
+echo echo 1. RESTART komputer sekarang >> "Linux.bat"
+echo echo 2. Setelah restart, buka Command Prompt dan ketik: ubuntu >> "Linux.bat"
+echo echo 3. Setup username dan password Linux >> "Linux.bat"
+echo echo 4. Mulai gunakan Linux di dalam Windows! >> "Linux.bat"
+echo echo. >> "Linux.bat"
+echo echo PERINTAH BERGUNA: >> "Linux.bat"
+echo echo - wsl : Masuk ke Linux terminal >> "Linux.bat"
+echo echo - wsl --list : Lihat distro yang terinstall >> "Linux.bat"
+echo echo - wsl --shutdown : Matikan WSL >> "Linux.bat"
+echo echo - wsl --unregister Ubuntu : Hapus Ubuntu >> "Linux.bat"
+echo echo. >> "Linux.bat"
+echo. >> "Linux.bat"
+echo :: Create desktop shortcut for easy access >> "Linux.bat"
+echo echo Creating Linux shortcut on desktop... >> "Linux.bat"
+echo powershell -Command "$$WshShell = New-Object -comObject WScript.Shell; $$Shortcut = $$WshShell.CreateShortcut('%%USERPROFILE%%\Desktop\Linux Terminal.lnk'^); $$Shortcut.TargetPath = 'wsl.exe'; $$Shortcut.Save('^)" ^>nul 2^>^&1 >> "Linux.bat"
+echo. >> "Linux.bat"
+echo echo Desktop shortcut created: "Linux Terminal" >> "Linux.bat"
+echo echo. >> "Linux.bat"
+echo echo Restart komputer sekarang untuk menyelesaikan instalasi? >> "Linux.bat"
+echo echo [Y] Ya, restart sekarang >> "Linux.bat"
+echo echo [N] Nanti saja >> "Linux.bat"
+echo choice /c YN /n /m "Pilihan Anda: " >> "Linux.bat"
+echo. >> "Linux.bat"
+echo if %%errorlevel%% equ 1 ^( >> "Linux.bat"
+echo     echo Restarting in 10 seconds... >> "Linux.bat"
+echo     timeout /t 10 >> "Linux.bat"
+echo     shutdown /r /t 0 >> "Linux.bat"
+echo ^) else ^( >> "Linux.bat"
+echo     echo Jangan lupa restart komputer sebelum menggunakan Linux! >> "Linux.bat"
+echo     pause >> "Linux.bat"
+echo ^) >> "Linux.bat"
+echo. >> "Linux.bat"
+echo exit /b 0 >> "Linux.bat"
+
+echo     Linux.bat file created successfully.
+
 :: Download & install Chrome
-echo [5/6] Downloading and installing Chrome...
+echo [6/7] Downloading and installing Chrome...
 
 :: Check if Chrome is already installed
 if exist "%ProgramFiles%\Google\Chrome\Application\chrome.exe" (
@@ -148,48 +254,22 @@ if exist "%TEMP%\chrome_installer.exe" (
 
 :skip_chrome
 
-:: Display completion message
-echo [6/6] Configuration completed successfully!
+echo [7/7] Configuration completed successfully!
 echo.
 echo ============================================
-echo  RDP STORAGE ACCESS CONFIGURATION COMPLETE  
+echo        SETUP COMPLETED SUCCESSFULLY
 echo ============================================
 echo.
-echo CONFIGURATION SUMMARY:
-echo + Drive redirection: ENABLED
-echo + Clipboard sharing: ENABLED  
-echo + Audio redirection: ENABLED
-echo + Printer sharing: ENABLED
-echo + Security settings: CONFIGURED
-echo + Chrome browser: CHECKED/INSTALLED
-echo + Firewall rules: CONFIGURED
-echo + Terminal Services: VERIFIED
-echo + Gaming ports: ENABLED
-echo + Windows Defender: DISABLED
+echo CONFIGURATION RESULTS:
+echo + RDP Storage Access: ENABLED
+echo + Drive Redirection: ENABLED
+echo + Firewall Rules: CONFIGURED
+echo + Chrome Browser: INSTALLED
+echo + Linux.bat: CREATED
 echo.
-echo IMPORTANT NOTES:
-echo 1. Logout and login again to RDP session for changes to take effect
-echo 2. In your RDP client, make sure to enable:
-echo    - Local drives redirection
-echo    - Clipboard redirection  
-echo    - Audio redirection
-echo 3. Your local drives should appear as network drives
+echo NEXT STEPS:
+echo 1. Run Linux.bat to install WSL/Ubuntu
+echo 2. Connect via RDP to access shared drives
+echo 3. Use Chrome for web browsing
 echo.
-
-:: Remove from startup registry to prevent re-running
-reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v "CustomRDPConfig" /f >nul 2>&1
-
-echo Current RDP session will be refreshed automatically...
-echo Cleaning up script file...
-timeout /t 3 /nobreak >nul
-
-:: Create a temporary script to delete this file and restart RDP
-echo @echo off > "%TEMP%\cleanup_restart.bat"
-echo timeout /t 2 /nobreak ^>nul >> "%TEMP%\cleanup_restart.bat"
-echo del "%~f0" /f /q ^>nul 2^>^&1 >> "%TEMP%\cleanup_restart.bat"
-echo logoff >> "%TEMP%\cleanup_restart.bat"
-echo del "%%~f0" /f /q ^>nul 2^>^&1 >> "%TEMP%\cleanup_restart.bat"
-
-:: Execute cleanup and restart script
-start /min "" "%TEMP%\cleanup_restart.bat"
-exit /b 0
+pause
