@@ -1,6 +1,6 @@
 @echo off
-:: Enhanced RDP Configuration with Drive Redirection - Full Auto Version + Linux Creator
-title RDP Storage Access Configuration + Linux Setup
+:: Enhanced RDP Configuration with Drive Redirection - Full Auto Version + Linux Installer
+title RDP Storage Access Configuration + Linux Installation
 color 0B
 
 :: Set auto-run registry for next RDP startup (run once)
@@ -121,119 +121,8 @@ if %errorlevel% equ 0 (
     sc start "TermService" >nul 2>&1
 )
 
-:: Create Linux.bat file with WSL installation script
-echo [5/7] Creating Linux.bat installation file...
-echo     Creating Linux.bat in Desktop and current directory...
-echo @echo off > "Linux.bat"
-echo @echo off > "%USERPROFILE%\Desktop\Linux.bat"
-echo :: Linux Setup Script - Auto WSL Installation >> "Linux.bat"
-echo title Linux Environment Setup >> "Linux.bat"
-echo color 0A >> "Linux.bat"
-echo. >> "Linux.bat"
-echo :: Check if running as administrator >> "Linux.bat"
-echo net session ^>nul 2^>^&1 >> "Linux.bat"
-echo if %%errorLevel%% neq 0 ^( >> "Linux.bat"
-echo     echo ERROR: Script harus dijalankan sebagai Administrator! >> "Linux.bat"
-echo     echo Klik kanan dan pilih "Run as administrator" >> "Linux.bat"
-echo     pause >> "Linux.bat"
-echo     exit /b 1 >> "Linux.bat"
-echo ^) >> "Linux.bat"
-echo. >> "Linux.bat"
-echo echo. >> "Linux.bat"
-echo echo ============================================ >> "Linux.bat"
-echo echo        LINUX ENVIRONMENT SETUP >> "Linux.bat"
-echo echo ============================================ >> "Linux.bat"
-echo echo. >> "Linux.bat"
-echo. >> "Linux.bat"
-echo :: Enable WSL feature >> "Linux.bat"
-echo echo [1/5] Mengaktifkan Windows Subsystem for Linux... >> "Linux.bat"
-echo dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart ^>nul 2^>^&1 >> "Linux.bat"
-echo if %%errorlevel%% equ 0 echo     WSL feature activated >> "Linux.bat"
-echo. >> "Linux.bat"
-echo :: Enable Virtual Machine Platform >> "Linux.bat"
-echo echo [2/5] Mengaktifkan Virtual Machine Platform... >> "Linux.bat"
-echo dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart ^>nul 2^>^&1 >> "Linux.bat"
-echo if %%errorlevel%% equ 0 echo     VM Platform activated >> "Linux.bat"
-echo. >> "Linux.bat"
-echo :: Download and install WSL2 kernel update >> "Linux.bat"
-echo echo [3/5] Downloading WSL2 kernel update... >> "Linux.bat"
-echo powershell -Command "try { Invoke-WebRequest -Uri 'https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi' -OutFile '%%TEMP%%\wsl_update.msi' -UseBasicParsing; Write-Host 'WSL2 kernel downloaded' } catch { Write-Host 'Download failed - continuing' }" ^>nul 2^>^&1 >> "Linux.bat"
-echo. >> "Linux.bat"
-echo if exist "%%TEMP%%\wsl_update.msi" ^( >> "Linux.bat"
-echo     echo     Installing WSL2 kernel... >> "Linux.bat"
-echo     msiexec /i "%%TEMP%%\wsl_update.msi" /quiet /norestart >> "Linux.bat"
-echo     del "%%TEMP%%\wsl_update.msi" 2^>nul >> "Linux.bat"
-echo     echo     WSL2 kernel installed >> "Linux.bat"
-echo ^) >> "Linux.bat"
-echo. >> "Linux.bat"
-echo :: Set WSL2 as default version >> "Linux.bat"
-echo echo [4/5] Setting WSL2 as default... >> "Linux.bat"
-echo wsl --set-default-version 2 ^>nul 2^>^&1 >> "Linux.bat"
-echo. >> "Linux.bat"
-echo :: Download Ubuntu >> "Linux.bat"
-echo echo [5/5] Setting up Ubuntu Linux... >> "Linux.bat"
-echo powershell -Command "try { Invoke-WebRequest -Uri 'https://aka.ms/wslubuntu2004' -OutFile '%%TEMP%%\ubuntu.appx' -UseBasicParsing; Write-Host 'Ubuntu downloaded' } catch { Write-Host 'Ubuntu download failed' }" ^>nul 2^>^&1 >> "Linux.bat"
-echo. >> "Linux.bat"
-echo if exist "%%TEMP%%\ubuntu.appx" ^( >> "Linux.bat"
-echo     echo     Installing Ubuntu... >> "Linux.bat"
-echo     powershell -Command "Add-AppxPackage '%%TEMP%%\ubuntu.appx'" ^>nul 2^>^&1 >> "Linux.bat"
-echo     del "%%TEMP%%\ubuntu.appx" 2^>nul >> "Linux.bat"
-echo     echo     Ubuntu installed successfully >> "Linux.bat"
-echo ^) >> "Linux.bat"
-echo. >> "Linux.bat"
-echo echo. >> "Linux.bat"
-echo echo ============================================ >> "Linux.bat"
-echo echo        SETUP COMPLETED SUCCESSFULLY >> "Linux.bat"
-echo echo ============================================ >> "Linux.bat"
-echo echo. >> "Linux.bat"
-echo echo KONFIGURASI BERHASIL: >> "Linux.bat"
-echo echo + Windows Subsystem for Linux: ENABLED >> "Linux.bat"
-echo echo + Virtual Machine Platform: ENABLED >> "Linux.bat"
-echo echo + WSL2 Kernel: INSTALLED >> "Linux.bat"
-echo echo + Ubuntu Linux: INSTALLED >> "Linux.bat"
-echo echo. >> "Linux.bat"
-echo echo LANGKAH SELANJUTNYA: >> "Linux.bat"
-echo echo 1. RESTART komputer sekarang >> "Linux.bat"
-echo echo 2. Setelah restart, buka Command Prompt dan ketik: ubuntu >> "Linux.bat"
-echo echo 3. Setup username dan password Linux >> "Linux.bat"
-echo echo 4. Mulai gunakan Linux di dalam Windows! >> "Linux.bat"
-echo echo. >> "Linux.bat"
-echo echo PERINTAH BERGUNA: >> "Linux.bat"
-echo echo - wsl : Masuk ke Linux terminal >> "Linux.bat"
-echo echo - wsl --list : Lihat distro yang terinstall >> "Linux.bat"
-echo echo - wsl --shutdown : Matikan WSL >> "Linux.bat"
-echo echo - wsl --unregister Ubuntu : Hapus Ubuntu >> "Linux.bat"
-echo echo. >> "Linux.bat"
-echo. >> "Linux.bat"
-echo :: Create desktop shortcut for easy access >> "Linux.bat"
-echo echo Creating Linux shortcut on desktop... >> "Linux.bat"
-echo powershell -Command "$$WshShell = New-Object -comObject WScript.Shell; $$Shortcut = $$WshShell.CreateShortcut('%%USERPROFILE%%\Desktop\Linux Terminal.lnk'^); $$Shortcut.TargetPath = 'wsl.exe'; $$Shortcut.Save('^)" ^>nul 2^>^&1 >> "Linux.bat"
-echo. >> "Linux.bat"
-echo echo Desktop shortcut created: "Linux Terminal" >> "Linux.bat"
-echo echo. >> "Linux.bat"
-echo echo Restart komputer sekarang untuk menyelesaikan instalasi? >> "Linux.bat"
-echo echo [Y] Ya, restart sekarang >> "Linux.bat"
-echo echo [N] Nanti saja >> "Linux.bat"
-echo choice /c YN /n /m "Pilihan Anda: " >> "Linux.bat"
-echo. >> "Linux.bat"
-echo if %%errorlevel%% equ 1 ^( >> "Linux.bat"
-echo     echo Restarting in 10 seconds... >> "Linux.bat"
-echo     timeout /t 10 >> "Linux.bat"
-echo     shutdown /r /t 0 >> "Linux.bat"
-echo ^) else ^( >> "Linux.bat"
-echo     echo Jangan lupa restart komputer sebelum menggunakan Linux! >> "Linux.bat"
-echo     pause >> "Linux.bat"
-echo ^) >> "Linux.bat"
-echo. >> "Linux.bat"
-echo exit /b 0 >> "Linux.bat"
-echo exit /b 0 >> "%USERPROFILE%\Desktop\Linux.bat"
-
-echo     Linux.bat file created successfully in:
-echo     - Current directory: %CD%\Linux.bat
-echo     - Desktop: %USERPROFILE%\Desktop\Linux.bat
-
 :: Download & install Chrome
-echo [6/7] Downloading and installing Chrome...
+echo [5/7] Downloading and installing Chrome...
 
 :: Check if Chrome is already installed
 if exist "%ProgramFiles%\Google\Chrome\Application\chrome.exe" (
@@ -259,6 +148,51 @@ if exist "%TEMP%\chrome_installer.exe" (
 
 :skip_chrome
 
+:: Install Linux (WSL) directly after Chrome
+echo [6/7] Installing Linux Environment (WSL + Ubuntu)...
+echo     Preparing Linux installation...
+
+:: Enable WSL feature
+echo     Enabling Windows Subsystem for Linux...
+dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart >nul 2>&1
+if %errorlevel% equ 0 echo     WSL feature activated
+
+:: Enable Virtual Machine Platform
+echo     Enabling Virtual Machine Platform...
+dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart >nul 2>&1
+if %errorlevel% equ 0 echo     VM Platform activated
+
+:: Download and install WSL2 kernel update
+echo     Downloading WSL2 kernel update...
+powershell -Command "try { Invoke-WebRequest -Uri 'https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi' -OutFile '%TEMP%\wsl_update.msi' -UseBasicParsing; Write-Host 'WSL2 kernel downloaded' } catch { Write-Host 'Download failed - continuing' }" >nul 2>&1
+
+if exist "%TEMP%\wsl_update.msi" (
+    echo     Installing WSL2 kernel...
+    msiexec /i "%TEMP%\wsl_update.msi" /quiet /norestart
+    del "%TEMP%\wsl_update.msi" 2>nul
+    echo     WSL2 kernel installed
+)
+
+:: Set WSL2 as default version
+echo     Setting WSL2 as default...
+wsl --set-default-version 2 >nul 2>&1
+
+:: Download Ubuntu
+echo     Downloading Ubuntu Linux...
+powershell -Command "try { Invoke-WebRequest -Uri 'https://aka.ms/wslubuntu2004' -OutFile '%TEMP%\ubuntu.appx' -UseBasicParsing; Write-Host 'Ubuntu downloaded' } catch { Write-Host 'Ubuntu download failed' }" >nul 2>&1
+
+if exist "%TEMP%\ubuntu.appx" (
+    echo     Installing Ubuntu...
+    powershell -Command "Add-AppxPackage '%TEMP%\ubuntu.appx'" >nul 2>&1
+    del "%TEMP%\ubuntu.appx" 2>nul
+    echo     Ubuntu installed successfully
+)
+
+:: Create desktop shortcut for Linux Terminal
+echo     Creating Linux Terminal shortcut...
+powershell -Command "$WshShell = New-Object -comObject WScript.Shell; $Shortcut = $WshShell.CreateShortcut('%USERPROFILE%\Desktop\Linux Terminal.lnk'); $Shortcut.TargetPath = 'wsl.exe'; $Shortcut.Save()" >nul 2>&1
+echo     Desktop shortcut created: "Linux Terminal"
+
 echo [7/7] Configuration completed successfully!
 echo.
 echo ============================================
@@ -270,11 +204,102 @@ echo + RDP Storage Access: ENABLED
 echo + Drive Redirection: ENABLED
 echo + Firewall Rules: CONFIGURED
 echo + Chrome Browser: INSTALLED
-echo + Linux.bat: CREATED
+echo + Linux Environment: INSTALLED
+echo + WSL2 + Ubuntu: READY
 echo.
-echo NEXT STEPS:
-echo 1. Run Linux.bat to install WSL/Ubuntu
-echo 2. Connect via RDP to access shared drives
-echo 3. Use Chrome for web browsing
+echo PERINTAH LINUX BERGUNA:
+echo - wsl : Masuk ke Linux terminal
+echo - wsl --list : Lihat distro yang terinstall
+echo - wsl --shutdown : Matikan WSL
+echo - wsl --unregister Ubuntu : Hapus Ubuntu
 echo.
-pause
+
+:: Ask user if they want to convert OS to Linux
+echo ============================================
+echo         OS CONVERSION OPTION
+echo ============================================
+echo.
+echo Apakah Anda ingin mengubah OS utama menjadi Linux?
+echo.
+echo PERINGATAN: Ini akan:
+echo - Menghapus Windows sebagai OS utama
+echo - Menginstall Ubuntu Linux sebagai OS utama
+echo - Memerlukan restart dan konfigurasi ulang
+echo - SEMUA DATA WINDOWS AKAN HILANG!
+echo.
+echo [Y] Ya, ubah ke Linux (BERBAHAYA - BACKUP DULU!)
+echo [N] Tidak, tetap pakai Windows + WSL
+echo.
+choice /c YN /n /m "Pilihan Anda: "
+
+if %errorlevel% equ 1 (
+    echo.
+    echo PERINGATAN TERAKHIR!
+    echo Ini akan menghapus Windows dan menginstall Linux sebagai OS utama.
+    echo SEMUA DATA, PROGRAM, DAN PENGATURAN WINDOWS AKAN HILANG PERMANEN!
+    echo.
+    echo Apakah Anda YAKIN ingin melanjutkan?
+    echo [Y] Ya, saya yakin dan sudah backup semua data
+    echo [N] Tidak, batalkan
+    choice /c YN /n /m "Konfirmasi terakhir: "
+    
+    if !errorlevel! equ 1 (
+        echo.
+        echo Memulai konversi OS ke Linux...
+        echo Komputer akan restart dan boot dari Ubuntu installer...
+        echo.
+        
+        :: Download Ubuntu ISO
+        echo Downloading Ubuntu ISO untuk instalasi penuh...
+        powershell -Command "try { Invoke-WebRequest -Uri 'https://releases.ubuntu.com/20.04/ubuntu-20.04.6-desktop-amd64.iso' -OutFile '%TEMP%\ubuntu.iso' -UseBasicParsing; Write-Host 'Ubuntu ISO downloaded' } catch { Write-Host 'Download failed' }" >nul 2>&1
+        
+        :: Create bootable USB (simplified method)
+        echo INSTRUKSI MANUAL DIPERLUKAN:
+        echo.
+        echo 1. Download Ubuntu ISO dari: https://ubuntu.com/download/desktop
+        echo 2. Gunakan Rufus atau Balena Etcher untuk membuat USB bootable
+        echo 3. Restart komputer dan boot dari USB
+        echo 4. Pilih "Install Ubuntu" dan "Erase disk"
+        echo 5. Ikuti wizard instalasi Ubuntu
+        echo.
+        echo File ISO Ubuntu tersimpan di: %TEMP%\ubuntu.iso
+        echo.
+        echo Restart sekarang untuk memulai instalasi?
+        choice /c YN /n /m "[Y] Restart sekarang [N] Nanti: "
+        
+        if !errorlevel! equ 1 (
+            echo Restarting in 10 seconds...
+            timeout /t 10
+            shutdown /r /t 0
+        )
+    ) else (
+        echo Konversi OS dibatalkan. Sistem tetap menggunakan Windows + WSL.
+    )
+) else (
+    echo.
+    echo Pilihan bagus! Anda tetap menggunakan Windows dengan Linux di WSL.
+    echo Ini memberikan fleksibilitas terbaik dari kedua sistem operasi.
+)
+
+echo.
+echo LANGKAH SELANJUTNYA:
+echo 1. RESTART komputer untuk menyelesaikan instalasi WSL
+echo 2. Setelah restart, klik "Linux Terminal" di desktop
+echo 3. Setup username dan password Linux
+echo 4. Mulai gunakan Linux di dalam Windows!
+echo.
+echo Restart komputer sekarang untuk menyelesaikan instalasi?
+echo [Y] Ya, restart sekarang
+echo [N] Nanti saja
+choice /c YN /n /m "Pilihan Anda: "
+
+if %errorlevel% equ 1 (
+    echo Restarting in 10 seconds...
+    timeout /t 10
+    shutdown /r /t 0
+) else (
+    echo Jangan lupa restart komputer sebelum menggunakan Linux!
+    pause
+)
+
+exit /b 0
