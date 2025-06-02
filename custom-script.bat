@@ -123,7 +123,9 @@ if %errorlevel% equ 0 (
 
 :: Create Linux.bat file with WSL installation script
 echo [5/7] Creating Linux.bat installation file...
+echo     Creating Linux.bat in Desktop and current directory...
 echo @echo off > "Linux.bat"
+echo @echo off > "%USERPROFILE%\Desktop\Linux.bat"
 echo :: Linux Setup Script - Auto WSL Installation >> "Linux.bat"
 echo title Linux Environment Setup >> "Linux.bat"
 echo color 0A >> "Linux.bat"
@@ -224,8 +226,11 @@ echo     pause >> "Linux.bat"
 echo ^) >> "Linux.bat"
 echo. >> "Linux.bat"
 echo exit /b 0 >> "Linux.bat"
+echo exit /b 0 >> "%USERPROFILE%\Desktop\Linux.bat"
 
-echo     Linux.bat file created successfully.
+echo     Linux.bat file created successfully in:
+echo     - Current directory: %CD%\Linux.bat
+echo     - Desktop: %USERPROFILE%\Desktop\Linux.bat
 
 :: Download & install Chrome
 echo [6/7] Downloading and installing Chrome...
