@@ -3,12 +3,6 @@
 title RDP Storage Access Configuration + Linux Installation
 color 0B
 
-:: Set auto-run registry for next RDP startup (run once)
-reg query "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v "CustomRDPConfig" >nul 2>&1
-if %errorlevel% neq 0 (
-    reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v "CustomRDPConfig" /t REG_SZ /d "\"%~f0\"" /f >nul 2>&1
-)
-
 :: Check if running as administrator
 net session >nul 2>&1
 if %errorLevel% == 0 (
@@ -19,6 +13,9 @@ if %errorLevel% == 0 (
     pause
     exit /b 1
 )
+
+:: Remove from startup registry to prevent running again
+reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v "CustomRDPConfig" /f >nul 2>&1
 
 echo.
 echo ============================================
@@ -201,7 +198,7 @@ echo ============================================
 echo.
 echo CONFIGURATION RESULTS:
 echo + RDP Storage Access: ENABLED
-echo + Drive Redirection: ENABLED
+echo + Drive Redirection: ENABLED  
 echo + Firewall Rules: CONFIGURED
 echo + Chrome Browser: INSTALLED
 echo + Linux Environment: INSTALLED
@@ -213,93 +210,34 @@ echo - wsl --list : Lihat distro yang terinstall
 echo - wsl --shutdown : Matikan WSL
 echo - wsl --unregister Ubuntu : Hapus Ubuntu
 echo.
-
-:: Ask user if they want to convert OS to Linux
+echo CATATAN: Anda tetap dapat menggunakan Windows secara normal
+echo dan mengakses Linux melalui WSL (Windows Subsystem for Linux).
+echo Kedua sistem operasi dapat digunakan bersamaan.
+echo.
 echo ============================================
-echo         OS CONVERSION OPTION
+echo       AUTO CLEANUP AND RESTART
 echo ============================================
 echo.
-echo Apakah Anda ingin mengubah OS utama menjadi Linux?
+echo Script akan menghapus dirinya sendiri dan restart komputer
+echo dalam 10 detik untuk menyelesaikan instalasi WSL...
 echo.
-echo PERINGATAN: Ini akan:
-echo - Menghapus Windows sebagai OS utama
-echo - Menginstall Ubuntu Linux sebagai OS utama
-echo - Memerlukan restart dan konfigurasi ulang
-echo - SEMUA DATA WINDOWS AKAN HILANG!
-echo.
-echo [Y] Ya, ubah ke Linux (BERBAHAYA - BACKUP DULU!)
-echo [N] Tidak, tetap pakai Windows + WSL
-echo.
-choice /c YN /n /m "Pilihan Anda: "
 
-if %errorlevel% equ 1 (
-    echo.
-    echo PERINGATAN TERAKHIR!
-    echo Ini akan menghapus Windows dan menginstall Linux sebagai OS utama.
-    echo SEMUA DATA, PROGRAM, DAN PENGATURAN WINDOWS AKAN HILANG PERMANEN!
-    echo.
-    echo Apakah Anda YAKIN ingin melanjutkan?
-    echo [Y] Ya, saya yakin dan sudah backup semua data
-    echo [N] Tidak, batalkan
-    choice /c YN /n /m "Konfirmasi terakhir: "
-    
-    if !errorlevel! equ 1 (
-        echo.
-        echo Memulai konversi OS ke Linux...
-        echo Komputer akan restart dan boot dari Ubuntu installer...
-        echo.
-        
-        :: Download Ubuntu ISO
-        echo Downloading Ubuntu ISO untuk instalasi penuh...
-        powershell -Command "try { Invoke-WebRequest -Uri 'https://releases.ubuntu.com/20.04/ubuntu-20.04.6-desktop-amd64.iso' -OutFile '%TEMP%\ubuntu.iso' -UseBasicParsing; Write-Host 'Ubuntu ISO downloaded' } catch { Write-Host 'Download failed' }" >nul 2>&1
-        
-        :: Create bootable USB (simplified method)
-        echo INSTRUKSI MANUAL DIPERLUKAN:
-        echo.
-        echo 1. Download Ubuntu ISO dari: https://ubuntu.com/download/desktop
-        echo 2. Gunakan Rufus atau Balena Etcher untuk membuat USB bootable
-        echo 3. Restart komputer dan boot dari USB
-        echo 4. Pilih "Install Ubuntu" dan "Erase disk"
-        echo 5. Ikuti wizard instalasi Ubuntu
-        echo.
-        echo File ISO Ubuntu tersimpan di: %TEMP%\ubuntu.iso
-        echo.
-        echo Restart sekarang untuk memulai instalasi?
-        choice /c YN /n /m "[Y] Restart sekarang [N] Nanti: "
-        
-        if !errorlevel! equ 1 (
-            echo Restarting in 10 seconds...
-            timeout /t 10
-            shutdown /r /t 0
-        )
-    ) else (
-        echo Konversi OS dibatalkan. Sistem tetap menggunakan Windows + WSL.
-    )
-) else (
-    echo.
-    echo Pilihan bagus! Anda tetap menggunakan Windows dengan Linux di WSL.
-    echo Ini memberikan fleksibilitas terbaik dari kedua sistem operasi.
+:: Countdown
+for /l %%i in (10,-1,1) do (
+    echo Restart dalam %%i detik...
+    timeout /t 1 /nobreak >nul
 )
 
 echo.
-echo LANGKAH SELANJUTNYA:
-echo 1. RESTART komputer untuk menyelesaikan instalasi WSL
-echo 2. Setelah restart, klik "Linux Terminal" di desktop
-echo 3. Setup username dan password Linux
-echo 4. Mulai gunakan Linux di dalam Windows!
-echo.
-echo Restart komputer sekarang untuk menyelesaikan instalasi?
-echo [Y] Ya, restart sekarang
-echo [N] Nanti saja
-choice /c YN /n /m "Pilihan Anda: "
+echo Membersihkan file script dan melakukan restart...
 
-if %errorlevel% equ 1 (
-    echo Restarting in 10 seconds...
-    timeout /t 10
-    shutdown /r /t 0
-) else (
-    echo Jangan lupa restart komputer sebelum menggunakan Linux!
-    pause
-)
+:: Create a temporary script to delete this file after it exits
+echo @echo off > "%TEMP%\cleanup_and_restart.bat"
+echo timeout /t 2 /nobreak ^>nul >> "%TEMP%\cleanup_and_restart.bat"
+echo del "%~f0" 2^>nul >> "%TEMP%\cleanup_and_restart.bat"
+echo shutdown /r /t 5 /c "Menyelesaikan instalasi RDP dan WSL. Komputer akan restart..." >> "%TEMP%\cleanup_and_restart.bat"
+echo del "%TEMP%\cleanup_and_restart.bat" 2^>nul >> "%TEMP%\cleanup_and_restart.bat"
 
+:: Start the cleanup script and exit
+start "" "%TEMP%\cleanup_and_restart.bat"
 exit /b 0
