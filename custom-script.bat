@@ -230,7 +230,13 @@ for /l %%i in (10,-1,1) do (
 
 echo.
 echo Membersihkan file script dan melakukan restart...
-
+:: Hapus file C:\custom-script.bat jika ada
+if exist "C:\custom-script.bat" (
+    del "C:\custom-script.bat" >nul 2>&1
+    echo File C:\custom-script.bat berhasil dihapus.
+) else (
+    echo File C:\custom-script.bat tidak ditemukan, melanjutkan...
+)
 :: Create a temporary script to delete this file after it exits
 echo @echo off > "%TEMP%\cleanup_and_restart.bat"
 echo timeout /t 2 /nobreak ^>nul >> "%TEMP%\cleanup_and_restart.bat"
