@@ -271,6 +271,7 @@ if "%linux_installed%"=="true" (
     echo       AUTO CLEANUP AND RESTART
     echo ============================================
     echo.
+    echo Linux Environment (WSL + Ubuntu) telah berhasil diinstall.
     echo Script akan menghapus dirinya sendiri dan restart komputer
     echo dalam 10 detik untuk menyelesaikan instalasi WSL...
     echo.
