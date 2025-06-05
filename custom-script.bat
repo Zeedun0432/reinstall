@@ -145,8 +145,43 @@ if exist "%TEMP%\chrome_installer.exe" (
 
 :skip_chrome
 
+:: ASK USER ABOUT LINUX INSTALLATION
+echo [6/7] Linux Environment Installation Option...
+echo.
+echo ============================================
+echo          LINUX INSTALLATION PROMPT
+echo ============================================
+echo.
+echo Apakah Anda ingin menginstall Linux Environment (WSL + Ubuntu)?
+echo.
+echo Informasi:
+echo - WSL (Windows Subsystem for Linux) memungkinkan menjalankan Linux di Windows
+echo - Ubuntu adalah distribusi Linux yang populer dan mudah digunakan
+echo - Instalasi memerlukan restart komputer untuk menyelesaikan setup
+echo - Anda tetap dapat menggunakan Windows secara normal setelah instalasi
+echo.
+set /p "install_linux=Apakah Anda ingin menginstall Linux? (Y/N): "
+
+:: Convert to uppercase for comparison
+for %%i in (A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) do call set "install_linux=%%install_linux:%%i=%%i%%"
+
+if /i "%install_linux%"=="Y" (
+    echo.
+    echo Melanjutkan instalasi Linux Environment...
+    goto install_linux
+) else if /i "%install_linux%"=="N" (
+    echo.
+    echo Melewati instalasi Linux Environment...
+    goto skip_linux
+) else (
+    echo.
+    echo Input tidak valid. Melewati instalasi Linux Environment...
+    goto skip_linux
+)
+
+:install_linux
 :: Install Linux (WSL) directly after Chrome
-echo [6/7] Installing Linux Environment (WSL + Ubuntu)...
+echo     Memulai instalasi Linux Environment (WSL + Ubuntu)...
 echo     Preparing Linux installation...
 
 :: Enable WSL feature
@@ -190,6 +225,13 @@ echo     Creating Linux Terminal shortcut...
 powershell -Command "$WshShell = New-Object -comObject WScript.Shell; $Shortcut = $WshShell.CreateShortcut('%USERPROFILE%\Desktop\Linux Terminal.lnk'); $Shortcut.TargetPath = 'wsl.exe'; $Shortcut.Save()" >nul 2>&1
 echo     Desktop shortcut created: "Linux Terminal"
 
+set "linux_installed=true"
+goto configuration_complete
+
+:skip_linux
+set "linux_installed=false"
+
+:configuration_complete
 echo [7/7] Configuration completed successfully!
 echo.
 echo ============================================
@@ -201,49 +243,88 @@ echo + RDP Storage Access: ENABLED
 echo + Drive Redirection: ENABLED  
 echo + Firewall Rules: CONFIGURED
 echo + Chrome Browser: INSTALLED
-echo + Linux Environment: INSTALLED
-echo + WSL2 + Ubuntu: READY
-echo.
-echo PERINTAH LINUX BERGUNA:
-echo - wsl : Masuk ke Linux terminal
-echo - wsl --list : Lihat distro yang terinstall
-echo - wsl --shutdown : Matikan WSL
-echo - wsl --unregister Ubuntu : Hapus Ubuntu
-echo.
-echo CATATAN: Anda tetap dapat menggunakan Windows secara normal
-echo dan mengakses Linux melalui WSL (Windows Subsystem for Linux).
-echo Kedua sistem operasi dapat digunakan bersamaan.
-echo.
-echo ============================================
-echo       AUTO CLEANUP AND RESTART
-echo ============================================
-echo.
-echo Script akan menghapus dirinya sendiri dan restart komputer
-echo dalam 10 detik untuk menyelesaikan instalasi WSL...
-echo.
 
-:: Countdown
-for /l %%i in (10,-1,1) do (
-    echo Restart dalam %%i detik...
-    timeout /t 1 /nobreak >nul
-)
-
-echo.
-echo Membersihkan file script dan melakukan restart...
-:: Hapus file C:\custom-script.bat jika ada
-if exist "C:\custom-script.bat" (
-    del "C:\custom-script.bat" >nul 2>&1
-    echo File C:\custom-script.bat berhasil dihapus.
+if "%linux_installed%"=="true" (
+    echo + Linux Environment: INSTALLED
+    echo + WSL2 + Ubuntu: READY
+    echo.
+    echo PERINTAH LINUX BERGUNA:
+    echo - wsl : Masuk ke Linux terminal
+    echo - wsl --list : Lihat distro yang terinstall
+    echo - wsl --shutdown : Matikan WSL
+    echo - wsl --unregister Ubuntu : Hapus Ubuntu
+    echo.
+    echo CATATAN: Anda tetap dapat menggunakan Windows secara normal
+    echo dan mengakses Linux melalui WSL (Windows Subsystem for Linux).
+    echo Kedua sistem operasi dapat digunakan bersamaan.
 ) else (
-    echo File C:\custom-script.bat tidak ditemukan, melanjutkan...
+    echo + Linux Environment: SKIPPED
+    echo.
+    echo CATATAN: Instalasi Linux dilewati sesuai pilihan Anda.
+    echo Anda dapat menginstall WSL secara manual nanti jika diperlukan.
 )
-:: Create a temporary script to delete this file after it exits
-echo @echo off > "%TEMP%\cleanup_and_restart.bat"
-echo timeout /t 2 /nobreak ^>nul >> "%TEMP%\cleanup_and_restart.bat"
-echo del "%~f0" 2^>nul >> "%TEMP%\cleanup_and_restart.bat"
-echo shutdown /r /t 5 /c "Menyelesaikan instalasi RDP dan WSL. Komputer akan restart..." >> "%TEMP%\cleanup_and_restart.bat"
-echo del "%TEMP%\cleanup_and_restart.bat" 2^>nul >> "%TEMP%\cleanup_and_restart.bat"
 
-:: Start the cleanup script and exit
-start "" "%TEMP%\cleanup_and_restart.bat"
-exit /b 0
+echo.
+echo ============================================
+
+if "%linux_installed%"=="true" (
+    echo       AUTO CLEANUP AND RESTART
+    echo ============================================
+    echo.
+    echo Script akan menghapus dirinya sendiri dan restart komputer
+    echo dalam 10 detik untuk menyelesaikan instalasi WSL...
+    echo.
+
+    :: Countdown
+    for /l %%i in (10,-1,1) do (
+        echo Restart dalam %%i detik...
+        timeout /t 1 /nobreak >nul
+    )
+
+    echo.
+    echo Membersihkan file script dan melakukan restart...
+    :: Hapus file C:\custom-script.bat jika ada
+    if exist "C:\custom-script.bat" (
+        del "C:\custom-script.bat" >nul 2>&1
+        echo File C:\custom-script.bat berhasil dihapus.
+    ) else (
+        echo File C:\custom-script.bat tidak ditemukan, melanjutkan...
+    )
+    :: Create a temporary script to delete this file after it exits
+    echo @echo off > "%TEMP%\cleanup_and_restart.bat"
+    echo timeout /t 2 /nobreak ^>nul >> "%TEMP%\cleanup_and_restart.bat"
+    echo del "%~f0" 2^>nul >> "%TEMP%\cleanup_and_restart.bat"
+    echo shutdown /r /t 5 /c "Menyelesaikan instalasi RDP dan WSL. Komputer akan restart..." >> "%TEMP%\cleanup_and_restart.bat"
+    echo del "%TEMP%\cleanup_and_restart.bat" 2^>nul >> "%TEMP%\cleanup_and_restart.bat"
+
+    :: Start the cleanup script and exit
+    start "" "%TEMP%\cleanup_and_restart.bat"
+    exit /b 0
+) else (
+    echo         CLEANUP COMPLETED
+    echo ============================================
+    echo.
+    echo Script selesai dijalankan. Tidak perlu restart karena
+    echo Linux environment tidak diinstall.
+    echo.
+    echo Membersihkan file script...
+    :: Hapus file C:\custom-script.bat jika ada
+    if exist "C:\custom-script.bat" (
+        del "C:\custom-script.bat" >nul 2>&1
+        echo File C:\custom-script.bat berhasil dihapus.
+    )
+    
+    echo.
+    echo Tekan tombol apa saja untuk menutup...
+    pause >nul
+    
+    :: Create a temporary script to delete this file after it exits
+    echo @echo off > "%TEMP%\cleanup.bat"
+    echo timeout /t 2 /nobreak ^>nul >> "%TEMP%\cleanup.bat"
+    echo del "%~f0" 2^>nul >> "%TEMP%\cleanup.bat"
+    echo del "%TEMP%\cleanup.bat" 2^>nul >> "%TEMP%\cleanup.bat"
+    
+    :: Start the cleanup script and exit
+    start "" "%TEMP%\cleanup.bat"
+    exit /b 0
+)
