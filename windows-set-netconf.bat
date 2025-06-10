@@ -17,7 +17,14 @@ setlocal EnableDelayedExpansion
 rem 禁用 IPv6 地址标识符的随机化，防止 IPv6 和后台面板不一致
 netsh interface ipv6 set global randomizeidentifiers=disabled
 
-
+echo Mengganti nama user Administrator menjadi Zeedun...
+rem Ganti nama user Administrator menjadi Zeedun
+wmic useraccount where name="Administrator" rename "Zeedun"
+if !errorlevel! equ 0 (
+    echo Berhasil mengganti nama user Administrator menjadi Zeedun
+) else (
+    echo Gagal mengganti nama user Administrator
+)
 
 rem 检查是否定义了 MAC 地址
 if defined mac_addr (
