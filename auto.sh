@@ -22,13 +22,13 @@ else
             IMG_URL="https://f005.backblazeb2.com/file/myos-image/windows2019.gz"
             ;;
         win_22)
-            IMG_URL="https://f005.backblazeb2.com/file/myos-image/windows2022.gz"
+            IMG_URL="http://128.199.180.209/windows2022.gz"
             ;;
         win_10)
-            IMG_URL="http://167.172.65.19/windows2022.gz"
+            IMG_URL="http://128.199.180.209/windows10pro.gz"
             ;;
         win_11)
-            IMG_URL="http://167.172.65.19/windows2025.gz"
+            IMG_URL="http://128.199.180.209/windows2025.gz"
             ;;
         *)
             echo "Invalid img_version or unsupported URL format."
