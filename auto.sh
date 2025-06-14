@@ -3,7 +3,7 @@
 
 # Pastikan dua parameter diberikan
 if [ "$#" -ne 2 ]; then
-    echo "Usage: $0 <password_rdp> <img_version_or_custom_url>"
+    echo "Usage: $0 <password> <img_version_or_custom_url>"
     echo "Available img_version: win_19, win_22, win_10, win_11"
     echo "Or provide a direct image URL (must end with .gz)"
     exit 1
@@ -32,7 +32,7 @@ else
             ;;
         *)
             echo "Invalid img_version or unsupported URL format."
-            echo "Use one of: win_10, win_22, win_19, win_12"
+            echo "Use one of: win_19, win_22, win_10, win_11"
             echo "Or provide a direct .gz URL"
             exit 1
             ;;
