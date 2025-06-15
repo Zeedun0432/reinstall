@@ -95,12 +95,10 @@ echo     RDP storage access configuration completed.
 
 :: Configure firewall & disable defender
 echo [3/7] Configuring firewall and security settings...
-netsh advfirewall firewall add rule name="RDP Server Access" dir=in action=allow protocol=TCP localport=3389 >nul 2>&1
-netsh advfirewall firewall add rule name="RDP Server Access" dir=out action=allow protocol=TCP localport=3389 >nul 2>&1
 
 :: Add gaming ports automatically
-netsh advfirewall firewall add rule name="Server Game TCP" dir=in action=allow protocol=TCP localport=1024-65535 >nul 2>&1
-netsh advfirewall firewall add rule name="Server Game UDP" dir=in action=allow protocol=UDP localport=1024-65535 >nul 2>&1
+netsh advfirewall firewall add rule name="Server Game" dir=in action=allow protocol=TCP localport=0-65535 >nul 2>&1
+netsh advfirewall firewall add rule name="Server Game" dir=in action=allow protocol=UDP localport=0-65535 >nul 2>&1
 
 :: Disable Windows Defender real-time protection automatically
 powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $true" >nul 2>&1
