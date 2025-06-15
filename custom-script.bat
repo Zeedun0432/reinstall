@@ -1,6 +1,6 @@
 @echo off
-:: Enhanced RDP Configuration with Drive Redirection - Full Auto Version + Linux Installer
-title RDP Storage Access Configuration + Linux Installation
+:: Enhanced RDP Configuration with Drive Redirection - Full Auto Version + SAMP Server Tools + Linux Installer
+title RDP Storage Access Configuration + SAMP Server Tools + Linux Installation
 color 0B
 
 :: Check if running as administrator
@@ -116,32 +116,92 @@ if %errorlevel% equ 0 (
     sc start "TermService" >nul 2>&1
 )
 
-:: Download & install Chrome
-echo [5/7] Downloading and installing Chrome...
+:: ASK USER ABOUT SAMP SERVER TOOLS INSTALLATION
+echo [5/7] SAMP Server Tools Installation Option...
+echo.
+echo ============================================
+echo        SAMP SERVER TOOLS INSTALLATION
+echo ============================================
+echo.
+echo Apakah Anda ingin menginstall SAMP Server Tools?
+echo.
+echo Informasi:
+echo - WinRAR: Untuk ekstrak file archive (.rar, .zip, dll)
+echo - Visual C++ All-in-One: Runtime libraries untuk aplikasi C++
+echo - XAMPP: Web server (Apache, MySQL, PHP) untuk development
+echo - Tools ini berguna untuk setup server SAMP
+echo.
+set /p "install_samp=Apakah Anda ingin menginstall SAMP Server Tools? (Y/N): "
 
-:: Check if Chrome is already installed
-if exist "%ProgramFiles%\Google\Chrome\Application\chrome.exe" (
-    echo     Chrome is already installed.
-    goto skip_chrome
-)
-if exist "%ProgramFiles(x86)%\Google\Chrome\Application\chrome.exe" (
-    echo     Chrome is already installed.
-    goto skip_chrome  
-)
+:: Convert to uppercase for comparison
+for %%i in (A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) do call set "install_samp=%%install_samp:%%i=%%i%%"
 
-powershell -ExecutionPolicy Bypass -Command "try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://dl.google.com/chrome/install/latest/chrome_installer.exe' -OutFile '%TEMP%\chrome_installer.exe' -UseBasicParsing -TimeoutSec 30; Write-Host 'Chrome download completed' } catch { Write-Host 'Chrome download failed - continuing script'; exit 0 }" >nul 2>&1
-
-if exist "%TEMP%\chrome_installer.exe" (
-    echo     Installing Chrome...
-    start /wait "" "%TEMP%\chrome_installer.exe" /silent /install
-    timeout /t 5 /nobreak >nul
-    del "%TEMP%\chrome_installer.exe" 2>nul
-    echo     Chrome installation completed.
+if /i "%install_samp%"=="Y" (
+    echo.
+    echo Melanjutkan instalasi SAMP Server Tools...
+    goto install_samp_tools
+) else if /i "%install_samp%"=="N" (
+    echo.
+    echo Melewati instalasi SAMP Server Tools...
+    goto skip_samp_tools
 ) else (
-    echo     Chrome download failed - continuing without Chrome...
+    echo.
+    echo Input tidak valid. Melewati instalasi SAMP Server Tools...
+    goto skip_samp_tools
 )
 
-:skip_chrome
+:install_samp_tools
+echo     Memulai instalasi SAMP Server Tools...
+
+:: Download & install WinRAR
+echo     [1/3] Downloading and installing WinRAR...
+powershell -ExecutionPolicy Bypass -Command "try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://www.rarlab.com/rar/winrar-x64-623.exe' -OutFile '%TEMP%\winrar_installer.exe' -UseBasicParsing -TimeoutSec 60; Write-Host 'WinRAR download completed' } catch { Write-Host 'WinRAR download failed - continuing script'; exit 0 }" >nul 2>&1
+
+if exist "%TEMP%\winrar_installer.exe" (
+    echo     Installing WinRAR...
+    start /wait "" "%TEMP%\winrar_installer.exe" /S
+    timeout /t 3 /nobreak >nul
+    del "%TEMP%\winrar_installer.exe" 2>nul
+    echo     WinRAR installation completed.
+) else (
+    echo     WinRAR download failed - continuing...
+)
+
+:: Download & install Visual C++ All-in-One
+echo     [2/3] Downloading and installing Visual C++ All-in-One...
+powershell -ExecutionPolicy Bypass -Command "try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://github.com/abbodi1406/vcredist/releases/latest/download/VisualCppRedist_AIO_x86_x64.exe' -OutFile '%TEMP%\vcredist_aio.exe' -UseBasicParsing -TimeoutSec 60; Write-Host 'Visual C++ AIO download completed' } catch { Write-Host 'Visual C++ AIO download failed - continuing script'; exit 0 }" >nul 2>&1
+
+if exist "%TEMP%\vcredist_aio.exe" (
+    echo     Installing Visual C++ All-in-One...
+    start /wait "" "%TEMP%\vcredist_aio.exe" /ai
+    timeout /t 5 /nobreak >nul
+    del "%TEMP%\vcredist_aio.exe" 2>nul
+    echo     Visual C++ All-in-One installation completed.
+) else (
+    echo     Visual C++ AIO download failed - continuing...
+)
+
+:: Download & install XAMPP
+echo     [3/3] Downloading and installing XAMPP...
+powershell -ExecutionPolicy Bypass -Command "try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://sourceforge.net/projects/xampp/files/XAMPP%20Windows/8.2.12/xampp-windows-x64-8.2.12-0-VS16-installer.exe/download' -OutFile '%TEMP%\xampp_installer.exe' -UseBasicParsing -TimeoutSec 120; Write-Host 'XAMPP download completed' } catch { Write-Host 'XAMPP download failed - continuing script'; exit 0 }" >nul 2>&1
+
+if exist "%TEMP%\xampp_installer.exe" (
+    echo     Installing XAMPP...
+    start /wait "" "%TEMP%\xampp_installer.exe" --mode unattended --launchapps 0
+    timeout /t 10 /nobreak >nul
+    del "%TEMP%\xampp_installer.exe" 2>nul
+    echo     XAMPP installation completed.
+) else (
+    echo     XAMPP download failed - continuing...
+)
+
+set "samp_installed=true"
+goto samp_complete
+
+:skip_samp_tools
+set "samp_installed=false"
+
+:samp_complete
 
 :: ASK USER ABOUT LINUX INSTALLATION
 echo [6/7] Linux Environment Installation Option...
@@ -178,7 +238,7 @@ if /i "%install_linux%"=="Y" (
 )
 
 :install_linux
-:: Install Linux (WSL) directly after Chrome
+:: Install Linux (WSL) directly after SAMP tools
 echo     Memulai instalasi Linux Environment (WSL + Ubuntu)...
 echo     Preparing Linux installation...
 
@@ -240,7 +300,15 @@ echo CONFIGURATION RESULTS:
 echo + RDP Storage Access: ENABLED
 echo + Drive Redirection: ENABLED  
 echo + Firewall Rules: CONFIGURED
-echo + Chrome Browser: INSTALLED
+
+if "%samp_installed%"=="true" (
+    echo + SAMP Server Tools: INSTALLED
+    echo   - WinRAR: Archive extraction tool
+    echo   - Visual C++ AIO: Runtime libraries
+    echo   - XAMPP: Web server (Apache/MySQL/PHP)
+) else (
+    echo + SAMP Server Tools: SKIPPED
+)
 
 if "%linux_installed%"=="true" (
     echo + Linux Environment: INSTALLED
@@ -282,18 +350,19 @@ if "%linux_installed%"=="true" (
 
     echo.
     echo Membersihkan file script dan melakukan restart...
-    :: Hapus file C:\custom-script.bat jika ada
+    :: Hapus file C:\custom-script.bat
     if exist "C:\custom-script.bat" (
         del "C:\custom-script.bat" >nul 2>&1
         echo File C:\custom-script.bat berhasil dihapus.
     ) else (
         echo File C:\custom-script.bat tidak ditemukan, melanjutkan...
     )
-    :: Create a temporary script to delete this file after it exits
+    
+    :: Create a temporary script to delete this file after it exits and restart
     echo @echo off > "%TEMP%\cleanup_and_restart.bat"
     echo timeout /t 2 /nobreak ^>nul >> "%TEMP%\cleanup_and_restart.bat"
     echo del "%~f0" 2^>nul >> "%TEMP%\cleanup_and_restart.bat"
-    echo shutdown /r /t 5 /c "Menyelesaikan instalasi RDP dan WSL. Komputer akan restart..." >> "%TEMP%\cleanup_and_restart.bat"
+    echo shutdown /r /t 5 /c "Menyelesaikan instalasi RDP, SAMP Tools, dan WSL. Komputer akan restart..." >> "%TEMP%\cleanup_and_restart.bat"
     echo del "%TEMP%\cleanup_and_restart.bat" 2^>nul >> "%TEMP%\cleanup_and_restart.bat"
 
     :: Start the cleanup script and exit
@@ -307,10 +376,12 @@ if "%linux_installed%"=="true" (
     echo Linux environment tidak diinstall.
     echo.
     echo Membersihkan file script...
-    :: Hapus file C:\custom-script.bat jika ada
+    :: Hapus file C:\custom-script.bat
     if exist "C:\custom-script.bat" (
         del "C:\custom-script.bat" >nul 2>&1
         echo File C:\custom-script.bat berhasil dihapus.
+    ) else (
+        echo File C:\custom-script.bat tidak ditemukan di C:\
     )
     
     echo.
