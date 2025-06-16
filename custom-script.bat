@@ -133,9 +133,7 @@ echo - Tools ini berguna untuk setup server SAMP
 echo.
 set /p "install_samp=Apakah Anda ingin menginstall SAMP Server Tools? (Y/N): "
 
-:: Convert to uppercase for comparison
-for %%i in (A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) do call set "install_samp=%%install_samp:%%i=%%i%%"
-
+:: Check input using case-insensitive comparison
 if /i "%install_samp%"=="Y" (
     echo.
     echo Melanjutkan instalasi SAMP Server Tools...
@@ -220,9 +218,7 @@ echo - Anda tetap dapat menggunakan Windows secara normal setelah instalasi
 echo.
 set /p "install_linux=Apakah Anda ingin menginstall Linux? (Y/N): "
 
-:: Convert to uppercase for comparison
-for %%i in (A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) do call set "install_linux=%%install_linux:%%i=%%i%%"
-
+:: Check input using case-insensitive comparison
 if /i "%install_linux%"=="Y" (
     echo.
     echo Melanjutkan instalasi Linux Environment...
