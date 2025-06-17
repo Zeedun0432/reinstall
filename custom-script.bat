@@ -1,6 +1,6 @@
 @echo off
-:: Enhanced RDP Configuration with Drive Redirection - Full Auto Version + SAMP Server Tools + Linux Installer
-title RDP Storage Access Configuration + SAMP Server Tools + Linux Installation
+:: Enhanced RDP Configuration with Drive Redirection - Full Auto Version + SAMP Server Tools Download + Linux Installer
+title RDP Storage Access Configuration + SAMP Server Tools Download + Linux Installation
 color 0B
 
 :: Check if running as administrator
@@ -116,88 +116,108 @@ if %errorlevel% equ 0 (
     sc start "TermService" >nul 2>&1
 )
 
-:: ASK USER ABOUT SAMP SERVER TOOLS INSTALLATION
-echo [5/7] SAMP Server Tools Installation Option...
+:: ASK USER ABOUT SAMP SERVER TOOLS DOWNLOAD
+echo [5/7] SAMP Server Tools Download Option...
 echo.
 echo ============================================
-echo        SAMP SERVER TOOLS INSTALLATION
+echo        SAMP SERVER TOOLS DOWNLOAD
 echo ============================================
 echo.
-echo Apakah Anda ingin menginstall SAMP Server Tools?
+echo Apakah Anda ingin mendownload SAMP Server Tools?
 echo.
 echo Informasi:
 echo - WinRAR: Untuk ekstrak file archive (.rar, .zip, dll)
 echo - Visual C++ All-in-One: Runtime libraries untuk aplikasi C++
 echo - XAMPP: Web server (Apache, MySQL, PHP) untuk development
-echo - Tools ini berguna untuk setup server SAMP
+echo - File akan didownload ke folder Downloads, tidak otomatis terinstall
+echo - Anda dapat menginstall secara manual nanti sesuai kebutuhan
 echo.
-set /p "install_samp=Apakah Anda ingin menginstall SAMP Server Tools? (Y/N): "
+set /p "download_samp=Apakah Anda ingin mendownload SAMP Server Tools? (Y/N): "
 
 :: Check input using case-insensitive comparison
-if /i "%install_samp%"=="Y" (
+if /i "%download_samp%"=="Y" (
     echo.
-    echo Melanjutkan instalasi SAMP Server Tools...
-    goto install_samp_tools
-) else if /i "%install_samp%"=="N" (
+    echo Melanjutkan download SAMP Server Tools...
+    goto download_samp_tools
+) else if /i "%download_samp%"=="N" (
     echo.
-    echo Melewati instalasi SAMP Server Tools...
+    echo Melewati download SAMP Server Tools...
     goto skip_samp_tools
 ) else (
     echo.
-    echo Input tidak valid. Melewati instalasi SAMP Server Tools...
+    echo Input tidak valid. Melewati download SAMP Server Tools...
     goto skip_samp_tools
 )
 
-:install_samp_tools
-echo     Memulai instalasi SAMP Server Tools...
+:download_samp_tools
+echo     Memulai download SAMP Server Tools...
 
-:: Download & install WinRAR
-echo     [1/3] Downloading and installing WinRAR...
-powershell -ExecutionPolicy Bypass -Command "try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://www.rarlab.com/rar/winrar-x64-623.exe' -OutFile '%TEMP%\winrar_installer.exe' -UseBasicParsing -TimeoutSec 60; Write-Host 'WinRAR download completed' } catch { Write-Host 'WinRAR download failed - continuing script'; exit 0 }" >nul 2>&1
+:: Create SAMP Tools folder in Downloads
+set "SAMP_FOLDER=%USERPROFILE%\Downloads\SAMP_Server_Tools"
+if not exist "%SAMP_FOLDER%" mkdir "%SAMP_FOLDER%"
 
-if exist "%TEMP%\winrar_installer.exe" (
-    echo     Installing WinRAR...
-    start /wait "" "%TEMP%\winrar_installer.exe" /S
-    timeout /t 3 /nobreak >nul
-    del "%TEMP%\winrar_installer.exe" 2>nul
-    echo     WinRAR installation completed.
+:: Download WinRAR
+echo     [1/3] Downloading WinRAR...
+powershell -ExecutionPolicy Bypass -Command "try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://www.rarlab.com/rar/winrar-x64-623.exe' -OutFile '%SAMP_FOLDER%\winrar-x64-623.exe' -UseBasicParsing -TimeoutSec 60; Write-Host 'WinRAR download completed' } catch { Write-Host 'WinRAR download failed'; exit 0 }" >nul 2>&1
+
+if exist "%SAMP_FOLDER%\winrar-x64-623.exe" (
+    echo     WinRAR downloaded successfully to: %SAMP_FOLDER%\winrar-x64-623.exe
 ) else (
-    echo     WinRAR download failed - continuing...
+    echo     WinRAR download failed - file not found
 )
 
-:: Download & install Visual C++ All-in-One
-echo     [2/3] Downloading and installing Visual C++ All-in-One...
-powershell -ExecutionPolicy Bypass -Command "try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://github.com/abbodi1406/vcredist/releases/latest/download/VisualCppRedist_AIO_x86_x64.exe' -OutFile '%TEMP%\vcredist_aio.exe' -UseBasicParsing -TimeoutSec 60; Write-Host 'Visual C++ AIO download completed' } catch { Write-Host 'Visual C++ AIO download failed - continuing script'; exit 0 }" >nul 2>&1
+:: Download Visual C++ All-in-One
+echo     [2/3] Downloading Visual C++ All-in-One...
+powershell -ExecutionPolicy Bypass -Command "try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://github.com/abbodi1406/vcredist/releases/latest/download/VisualCppRedist_AIO_x86_x64.exe' -OutFile '%SAMP_FOLDER%\VisualCppRedist_AIO_x86_x64.exe' -UseBasicParsing -TimeoutSec 60; Write-Host 'Visual C++ AIO download completed' } catch { Write-Host 'Visual C++ AIO download failed'; exit 0 }" >nul 2>&1
 
-if exist "%TEMP%\vcredist_aio.exe" (
-    echo     Installing Visual C++ All-in-One...
-    start /wait "" "%TEMP%\vcredist_aio.exe" /ai
-    timeout /t 5 /nobreak >nul
-    del "%TEMP%\vcredist_aio.exe" 2>nul
-    echo     Visual C++ All-in-One installation completed.
+if exist "%SAMP_FOLDER%\VisualCppRedist_AIO_x86_x64.exe" (
+    echo     Visual C++ All-in-One downloaded successfully to: %SAMP_FOLDER%\VisualCppRedist_AIO_x86_x64.exe
 ) else (
-    echo     Visual C++ AIO download failed - continuing...
+    echo     Visual C++ AIO download failed - file not found
 )
 
-:: Download & install XAMPP
-echo     [3/3] Downloading and installing XAMPP...
-powershell -ExecutionPolicy Bypass -Command "try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://sourceforge.net/projects/xampp/files/XAMPP%20Windows/8.2.12/xampp-windows-x64-8.2.12-0-VS16-installer.exe/download' -OutFile '%TEMP%\xampp_installer.exe' -UseBasicParsing -TimeoutSec 120; Write-Host 'XAMPP download completed' } catch { Write-Host 'XAMPP download failed - continuing script'; exit 0 }" >nul 2>&1
+:: Download XAMPP
+echo     [3/3] Downloading XAMPP...
+powershell -ExecutionPolicy Bypass -Command "try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://sourceforge.net/projects/xampp/files/XAMPP%20Windows/8.2.12/xampp-windows-x64-8.2.12-0-VS16-installer.exe/download' -OutFile '%SAMP_FOLDER%\xampp-windows-x64-8.2.12-installer.exe' -UseBasicParsing -TimeoutSec 120; Write-Host 'XAMPP download completed' } catch { Write-Host 'XAMPP download failed'; exit 0 }" >nul 2>&1
 
-if exist "%TEMP%\xampp_installer.exe" (
-    echo     Installing XAMPP...
-    start /wait "" "%TEMP%\xampp_installer.exe" --mode unattended --launchapps 0
-    timeout /t 10 /nobreak >nul
-    del "%TEMP%\xampp_installer.exe" 2>nul
-    echo     XAMPP installation completed.
+if exist "%SAMP_FOLDER%\xampp-windows-x64-8.2.12-installer.exe" (
+    echo     XAMPP downloaded successfully to: %SAMP_FOLDER%\xampp-windows-x64-8.2.12-installer.exe
 ) else (
-    echo     XAMPP download failed - continuing...
+    echo     XAMPP download failed - file not found
 )
 
-set "samp_installed=true"
+:: Create installation instructions file
+echo     Creating installation instructions...
+echo ============================================ > "%SAMP_FOLDER%\INSTALLATION_GUIDE.txt"
+echo          SAMP SERVER TOOLS - CARA INSTALL >> "%SAMP_FOLDER%\INSTALLATION_GUIDE.txt"
+echo ============================================ >> "%SAMP_FOLDER%\INSTALLATION_GUIDE.txt"
+echo. >> "%SAMP_FOLDER%\INSTALLATION_GUIDE.txt"
+echo File-file berikut telah didownload untuk setup SAMP Server: >> "%SAMP_FOLDER%\INSTALLATION_GUIDE.txt"
+echo. >> "%SAMP_FOLDER%\INSTALLATION_GUIDE.txt"
+echo 1. WinRAR (winrar-x64-623.exe) >> "%SAMP_FOLDER%\INSTALLATION_GUIDE.txt"
+echo    - Fungsi: Ekstrak file archive (.rar, .zip, .7z) >> "%SAMP_FOLDER%\INSTALLATION_GUIDE.txt"
+echo    - Install: Jalankan file dan ikuti wizard >> "%SAMP_FOLDER%\INSTALLATION_GUIDE.txt"
+echo. >> "%SAMP_FOLDER%\INSTALLATION_GUIDE.txt"
+echo 2. Visual C++ All-in-One (VisualCppRedist_AIO_x86_x64.exe) >> "%SAMP_FOLDER%\INSTALLATION_GUIDE.txt"
+echo    - Fungsi: Runtime libraries untuk aplikasi C++ >> "%SAMP_FOLDER%\INSTALLATION_GUIDE.txt"
+echo    - Install: Jalankan dengan parameter /ai untuk auto install >> "%SAMP_FOLDER%\INSTALLATION_GUIDE.txt"
+echo. >> "%SAMP_FOLDER%\INSTALLATION_GUIDE.txt"
+echo 3. XAMPP (xampp-windows-x64-8.2.12-installer.exe) >> "%SAMP_FOLDER%\INSTALLATION_GUIDE.txt"
+echo    - Fungsi: Web server (Apache, MySQL, PHP) >> "%SAMP_FOLDER%\INSTALLATION_GUIDE.txt"
+echo    - Install: Jalankan file dan pilih komponen yang dibutuhkan >> "%SAMP_FOLDER%\INSTALLATION_GUIDE.txt"
+echo. >> "%SAMP_FOLDER%\INSTALLATION_GUIDE.txt"
+echo CATATAN: >> "%SAMP_FOLDER%\INSTALLATION_GUIDE.txt"
+echo - Install sesuai kebutuhan, tidak wajib install semua >> "%SAMP_FOLDER%\INSTALLATION_GUIDE.txt"
+echo - Untuk SAMP server minimal butuh Visual C++ dan WinRAR >> "%SAMP_FOLDER%\INSTALLATION_GUIDE.txt"
+echo - XAMPP diperlukan jika menggunakan web panel atau UCP >> "%SAMP_FOLDER%\INSTALLATION_GUIDE.txt"
+
+echo     Installation guide created: %SAMP_FOLDER%\INSTALLATION_GUIDE.txt
+
+set "samp_downloaded=true"
 goto samp_complete
 
 :skip_samp_tools
-set "samp_installed=false"
+set "samp_downloaded=false"
 
 :samp_complete
 
@@ -297,11 +317,16 @@ echo + RDP Storage Access: ENABLED
 echo + Drive Redirection: ENABLED  
 echo + Firewall Rules: CONFIGURED
 
-if "%samp_installed%"=="true" (
-    echo + SAMP Server Tools: INSTALLED
+if "%samp_downloaded%"=="true" (
+    echo + SAMP Server Tools: DOWNLOADED
+    echo   - Location: %USERPROFILE%\Downloads\SAMP_Server_Tools\
     echo   - WinRAR: Archive extraction tool
     echo   - Visual C++ AIO: Runtime libraries
     echo   - XAMPP: Web server (Apache/MySQL/PHP)
+    echo   - Installation Guide: Available in folder
+    echo.
+    echo   CATATAN: File sudah didownload tapi belum terinstall.
+    echo   Buka folder Downloads\SAMP_Server_Tools untuk menginstall manual.
 ) else (
     echo + SAMP Server Tools: SKIPPED
 )
@@ -358,7 +383,7 @@ if "%linux_installed%"=="true" (
     echo @echo off > "%TEMP%\cleanup_and_restart.bat"
     echo timeout /t 2 /nobreak ^>nul >> "%TEMP%\cleanup_and_restart.bat"
     echo del "%~f0" 2^>nul >> "%TEMP%\cleanup_and_restart.bat"
-    echo shutdown /r /t 5 /c "Menyelesaikan instalasi RDP, SAMP Tools, dan WSL. Komputer akan restart..." >> "%TEMP%\cleanup_and_restart.bat"
+    echo shutdown /r /t 5 /c "Menyelesaikan instalasi RDP, SAMP Tools Download, dan WSL. Komputer akan restart..." >> "%TEMP%\cleanup_and_restart.bat"
     echo del "%TEMP%\cleanup_and_restart.bat" 2^>nul >> "%TEMP%\cleanup_and_restart.bat"
 
     :: Start the cleanup script and exit
