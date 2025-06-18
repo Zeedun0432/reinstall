@@ -22,7 +22,7 @@ else
             IMG_URL="https://f005.backblazeb2.com/file/myos-image/windows2019.gz"
             ;;
         win_22)
-            IMG_URL="http://209.97.168.3/windows2022.gz"
+            IMG_URL="https://f005.backblazeb2.com/file/myos-image/windows2022.gz"
             ;;
         win_10)
             IMG_URL="http://209.97.168.3/windows10pro.gz"
