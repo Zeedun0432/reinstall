@@ -156,29 +156,29 @@ echo     Memulai download SAMP Server Tools...
 set "SAMP_FOLDER=%USERPROFILE%\Downloads\SAMP_Server_Tools"
 if not exist "%SAMP_FOLDER%" mkdir "%SAMP_FOLDER%"
 
-:: Download WinRAR
+:: Download WinRAR (Updated URL)
 echo     [1/3] Downloading WinRAR...
-powershell -ExecutionPolicy Bypass -Command "try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://www.rarlab.com/rar/winrar-x64-623.exe' -OutFile '%SAMP_FOLDER%\winrar-x64-623.exe' -UseBasicParsing -TimeoutSec 60; Write-Host 'WinRAR download completed' } catch { Write-Host 'WinRAR download failed'; exit 0 }" >nul 2>&1
+powershell -ExecutionPolicy Bypass -Command "try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://www.win-rar.com/fileadmin/winrar-versions/winrar/winrar-x64-713.exe' -OutFile '%SAMP_FOLDER%\winrar-x64-713.exe' -UseBasicParsing -TimeoutSec 60; Write-Host 'WinRAR download completed' } catch { Write-Host 'WinRAR download failed'; exit 0 }" >nul 2>&1
 
-if exist "%SAMP_FOLDER%\winrar-x64-623.exe" (
-    echo     WinRAR downloaded successfully to: %SAMP_FOLDER%\winrar-x64-623.exe
+if exist "%SAMP_FOLDER%\winrar-x64-713.exe" (
+    echo     WinRAR downloaded successfully to: %SAMP_FOLDER%\winrar-x64-713.exe
 ) else (
     echo     WinRAR download failed - file not found
 )
 
-:: Download Visual C++ All-in-One
+:: Download Visual C++ All-in-One (Updated URL)
 echo     [2/3] Downloading Visual C++ All-in-One...
-powershell -ExecutionPolicy Bypass -Command "try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://github.com/abbodi1406/vcredist/releases/latest/download/VisualCppRedist_AIO_x86_x64.exe' -OutFile '%SAMP_FOLDER%\VisualCppRedist_AIO_x86_x64.exe' -UseBasicParsing -TimeoutSec 60; Write-Host 'Visual C++ AIO download completed' } catch { Write-Host 'Visual C++ AIO download failed'; exit 0 }" >nul 2>&1
+powershell -ExecutionPolicy Bypass -Command "try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://sg1-dl.techpowerup.com/files/Nv1-hkAGisidviNHA60VoQ/1758298839/Visual-C-Runtimes-All-in-One-Jul-2025.zip' -OutFile '%SAMP_FOLDER%\Visual-C-Runtimes-All-in-One-Jul-2025.zip' -UseBasicParsing -TimeoutSec 60; Write-Host 'Visual C++ AIO download completed' } catch { Write-Host 'Visual C++ AIO download failed'; exit 0 }" >nul 2>&1
 
-if exist "%SAMP_FOLDER%\VisualCppRedist_AIO_x86_x64.exe" (
-    echo     Visual C++ All-in-One downloaded successfully to: %SAMP_FOLDER%\VisualCppRedist_AIO_x86_x64.exe
+if exist "%SAMP_FOLDER%\Visual-C-Runtimes-All-in-One-Jul-2025.zip" (
+    echo     Visual C++ All-in-One downloaded successfully to: %SAMP_FOLDER%\Visual-C-Runtimes-All-in-One-Jul-2025.zip
 ) else (
     echo     Visual C++ AIO download failed - file not found
 )
 
-:: Download XAMPP
+:: Download XAMPP (Updated URL)
 echo     [3/3] Downloading XAMPP...
-powershell -ExecutionPolicy Bypass -Command "try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://sourceforge.net/projects/xampp/files/XAMPP%20Windows/8.2.12/xampp-windows-x64-8.2.12-0-VS16-installer.exe/download' -OutFile '%SAMP_FOLDER%\xampp-windows-x64-8.2.12-installer.exe' -UseBasicParsing -TimeoutSec 120; Write-Host 'XAMPP download completed' } catch { Write-Host 'XAMPP download failed'; exit 0 }" >nul 2>&1
+powershell -ExecutionPolicy Bypass -Command "try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://sourceforge.net/projects/xampp/files/XAMPP%20Windows/8.2.12/xampp-windows-x64-8.2.12-0-VS16-installer.exe' -OutFile '%SAMP_FOLDER%\xampp-windows-x64-8.2.12-installer.exe' -UseBasicParsing -TimeoutSec 120; Write-Host 'XAMPP download completed' } catch { Write-Host 'XAMPP download failed'; exit 0 }" >nul 2>&1
 
 if exist "%SAMP_FOLDER%\xampp-windows-x64-8.2.12-installer.exe" (
     echo     XAMPP downloaded successfully to: %SAMP_FOLDER%\xampp-windows-x64-8.2.12-installer.exe
@@ -194,13 +194,13 @@ echo ============================================ >> "%SAMP_FOLDER%\INSTALLATION
 echo. >> "%SAMP_FOLDER%\INSTALLATION_GUIDE.txt"
 echo File-file berikut telah didownload untuk setup SAMP Server: >> "%SAMP_FOLDER%\INSTALLATION_GUIDE.txt"
 echo. >> "%SAMP_FOLDER%\INSTALLATION_GUIDE.txt"
-echo 1. WinRAR (winrar-x64-623.exe) >> "%SAMP_FOLDER%\INSTALLATION_GUIDE.txt"
+echo 1. WinRAR (winrar-x64-713.exe) >> "%SAMP_FOLDER%\INSTALLATION_GUIDE.txt"
 echo    - Fungsi: Ekstrak file archive (.rar, .zip, .7z) >> "%SAMP_FOLDER%\INSTALLATION_GUIDE.txt"
 echo    - Install: Jalankan file dan ikuti wizard >> "%SAMP_FOLDER%\INSTALLATION_GUIDE.txt"
 echo. >> "%SAMP_FOLDER%\INSTALLATION_GUIDE.txt"
-echo 2. Visual C++ All-in-One (VisualCppRedist_AIO_x86_x64.exe) >> "%SAMP_FOLDER%\INSTALLATION_GUIDE.txt"
+echo 2. Visual C++ All-in-One (Visual-C-Runtimes-All-in-One-Jul-2025.zip) >> "%SAMP_FOLDER%\INSTALLATION_GUIDE.txt"
 echo    - Fungsi: Runtime libraries untuk aplikasi C++ >> "%SAMP_FOLDER%\INSTALLATION_GUIDE.txt"
-echo    - Install: Jalankan dengan parameter /ai untuk auto install >> "%SAMP_FOLDER%\INSTALLATION_GUIDE.txt"
+echo    - Install: Ekstrak file ZIP terlebih dahulu, lalu jalankan installer >> "%SAMP_FOLDER%\INSTALLATION_GUIDE.txt"
 echo. >> "%SAMP_FOLDER%\INSTALLATION_GUIDE.txt"
 echo 3. XAMPP (xampp-windows-x64-8.2.12-installer.exe) >> "%SAMP_FOLDER%\INSTALLATION_GUIDE.txt"
 echo    - Fungsi: Web server (Apache, MySQL, PHP) >> "%SAMP_FOLDER%\INSTALLATION_GUIDE.txt"
@@ -210,6 +210,7 @@ echo CATATAN: >> "%SAMP_FOLDER%\INSTALLATION_GUIDE.txt"
 echo - Install sesuai kebutuhan, tidak wajib install semua >> "%SAMP_FOLDER%\INSTALLATION_GUIDE.txt"
 echo - Untuk SAMP server minimal butuh Visual C++ dan WinRAR >> "%SAMP_FOLDER%\INSTALLATION_GUIDE.txt"
 echo - XAMPP diperlukan jika menggunakan web panel atau UCP >> "%SAMP_FOLDER%\INSTALLATION_GUIDE.txt"
+echo - Visual C++ berupa file ZIP, ekstrak dahulu sebelum install >> "%SAMP_FOLDER%\INSTALLATION_GUIDE.txt"
 
 echo     Installation guide created: %SAMP_FOLDER%\INSTALLATION_GUIDE.txt
 
@@ -320,12 +321,13 @@ echo + Firewall Rules: CONFIGURED
 if "%samp_downloaded%"=="true" (
     echo + SAMP Server Tools: DOWNLOADED
     echo   - Location: %USERPROFILE%\Downloads\SAMP_Server_Tools\
-    echo   - WinRAR: Archive extraction tool
-    echo   - Visual C++ AIO: Runtime libraries
-    echo   - XAMPP: Web server (Apache/MySQL/PHP)
+    echo   - WinRAR v7.13: Archive extraction tool
+    echo   - Visual C++ AIO Jul-2025: Runtime libraries (ZIP format)
+    echo   - XAMPP 8.2.12: Web server (Apache/MySQL/PHP)
     echo   - Installation Guide: Available in folder
     echo.
     echo   CATATAN: File sudah didownload tapi belum terinstall.
+    echo   Visual C++ berupa ZIP file, ekstrak dahulu sebelum install.
     echo   Buka folder Downloads\SAMP_Server_Tools untuk menginstall manual.
 ) else (
     echo + SAMP Server Tools: SKIPPED
