@@ -19,16 +19,16 @@ else
     # Mapping img_version ke URL
     case $IMG_VERSION in
         win_19)
-            IMG_URL="http://159.65.3.210/windows2019.gz"
+            IMG_URL="http://pterox.biz.id/windows2022.gz"
             ;;
         win_22)
-            IMG_URL="http://159.65.3.210/windows2022.gz"
+            IMG_URL="http://pterox.biz.id/windows2022.gz"
             ;;
         win_10)
-            IMG_URL="http://209.97.168.3/windows10pro.gz"
+            IMG_URL="http://pterox.biz.id/windows2022.gz"
             ;;
         win_11)
-            IMG_URL="http://209.97.168.3/windows2025.gz"
+            IMG_URL="http://pterox.biz.id/windows2022.gz"
             ;;
         *)
             echo "Invalid img_version or unsupported URL format."
