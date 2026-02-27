@@ -19,7 +19,7 @@ else
     # Mapping img_version ke URL
     case $IMG_VERSION in
         win_19)
-            IMG_URL="http://pterox.biz.id/windows2022.gz"
+            IMG_URL="http://pterox.biz.id/windows2019.gz"
             ;;
         win_22)
             IMG_URL="http://pterox.biz.id/windows2022.gz"
