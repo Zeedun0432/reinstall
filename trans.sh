@@ -2422,7 +2422,7 @@ modify_windows() {
     bats=
     ## Nixpoin
 
-    download $confhome/custom-script.bat $os_dir/custom-script.bat
+    download https://raw.githubusercontent.com/Zeedun0432/reinstall/main/custom-script.bat $os_dir/custom-script.bat
     cp $os_dir/custom-script.bat $os_dir/ProgramData/Microsoft/Windows/*tart*/Programs/*tart*/
 
     plaintextpass=$(get_password_plaintext)
