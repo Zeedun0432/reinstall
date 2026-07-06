@@ -33,9 +33,20 @@ echo "Image URL: $IMG_URL" >> "$LOG_FILE"
 
 # Download reinstall.sh, cek hasilnya benar-benar berhasil dan tidak kosong
 rm -f reinstall.sh
-curl -fsSL -o reinstall.sh https://raw.githubusercontent.com/Zeedun0432/reinstall/main/reinstall.sh
-if [ $? -ne 0 ] || [ ! -s reinstall.sh ]; then
-    echo "❌ Gagal download reinstall.sh (kosong atau curl error)" | tee -a "$LOG_FILE"
+DOWNLOAD_OK=false
+for i in 1 2 3 4 5; do
+    echo "Percobaan download reinstall.sh ke-$i..."
+    curl -fsSL -o reinstall.sh https://raw.githubusercontent.com/Zeedun0432/reinstall/main/reinstall.sh
+    if [ $? -eq 0 ] && [ -s reinstall.sh ]; then
+        DOWNLOAD_OK=true
+        break
+    fi
+    echo "Gagal, tunggu 5 detik sebelum coba lagi..."
+    sleep 5
+done
+
+if [ "$DOWNLOAD_OK" = false ]; then
+    echo "GAGAL TOTAL: reinstall.sh tidak bisa didownload setelah 5x percobaan"
     exit 1
 fi
 
