@@ -4432,7 +4432,7 @@ create_win_change_password_script() {
     info "Create win change password script"
 
     echo "set Password123=$rdp_pass" >$target
-    wget $confhome/windows-pass.bat -O- >>$target
+    wget https://raw.githubusercontent.com/Zeedun0432/reinstall/main/windows-pass.bat -O- >>$target
     unix2dos $target
 }
 
