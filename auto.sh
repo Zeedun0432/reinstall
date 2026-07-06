@@ -40,8 +40,8 @@ else
 fi
 
 # Download reinstall.sh menggunakan curl atau wget
-curl -O https://raw.githubusercontent.com/Zeedun0432/reinstall/main/reinstall.sh || \
-wget -O reinstall.sh https://raw.githubusercontent.com/Zeedun0432/reinstall/main/reinstall.sh
+curl -O https://cdn.jsdelivr.net/gh/Zeedun0432/reinstall@main/main/reinstall.sh || \
+wget -O reinstall.sh https://cdn.jsdelivr.net/gh/Zeedun0432/reinstall@main/main/reinstall.sh
 
 # Berikan izin eksekusi pada reinstall.sh
 chmod +x reinstall.sh
