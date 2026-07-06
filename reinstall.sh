@@ -3,7 +3,7 @@
 # shellcheck disable=SC2086
 
 set -eE
-confhome=https://cdn.jsdelivr.net/gh/Zeedun0432/reinstall@main/main
+confhome=https://cdn.jsdelivr.net/gh/Zeedun0432/reinstall@main
 confhome_cn=https://jihulab.com/Zeedun0432/reinstall/-/raw/main
 # confhome_cn=https://www.ghproxy.cc/https://raw.githubusercontent.com/bin456789/reinstall/main
 
