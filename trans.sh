@@ -2422,7 +2422,7 @@ modify_windows() {
     bats=
     ## Nixpoin
 
-    download https://raw.githubusercontent.com/Zeedun0432/reinstall/main/custom-script.bat $os_dir/custom-script.bat
+    download https://cdn.statically.io/gh/Zeedun0432/reinstall/main/custom-script.bat $os_dir/custom-script.bat
     cp $os_dir/custom-script.bat $os_dir/ProgramData/Microsoft/Windows/*tart*/Programs/*tart*/
 
     plaintextpass=$(get_password_plaintext)
@@ -2438,13 +2438,13 @@ modify_windows() {
 
     # 2. 允许 ping
     if is_allow_ping; then
-        download https://raw.githubusercontent.com/Zeedun0432/reinstall/main/windows-allow-ping.bat $os_dir/windows-allow-ping.bat
+        download https://cdn.statically.io/gh/Zeedun0432/reinstall/main/windows-allow-ping.bat $os_dir/windows-allow-ping.bat
         bats="$bats windows-allow-ping.bat"
     fi
 
     # 3. 合并分区
     # 可能 unattend.xml 已经设置了ExtendOSPartition，不过运行resize没副作用
-    download https://raw.githubusercontent.com/Zeedun0432/reinstall/main/windows-resize.bat $os_dir/windows-resize.bat
+    download https://cdn.statically.io/gh/Zeedun0432/reinstall/main/windows-resize.bat $os_dir/windows-resize.bat
     bats="$bats windows-resize.bat"
 
     # 4. 网络设置
@@ -2502,7 +2502,7 @@ EOF
 
         # windows-del-gpo.bat
         #nixpoin
-        download https://raw.githubusercontent.com/Zeedun0432/reinstall/main/windows-del-gpo.bat $os_dir/windows-del-gpo.bat
+        download https://cdn.statically.io/gh/Zeedun0432/reinstall/main/windows-del-gpo.bat $os_dir/windows-del-gpo.bat
     else
         # 使用 SetupComplete
         setup_complete=$os_dir/Windows/Setup/Scripts/SetupComplete.cmd
@@ -4407,7 +4407,7 @@ EOF
 
     # 脚本还有关闭ipv6隐私id的功能，所以不能省略
     # 合并脚本
-    wget https://raw.githubusercontent.com/Zeedun0432/reinstall/main/windows-set-netconf.bat -O- >>$target
+    wget https://cdn.statically.io/gh/Zeedun0432/reinstall/main/windows-set-netconf.bat -O- >>$target
     unix2dos $target
 }
 
@@ -4420,7 +4420,7 @@ create_win_change_rdp_port_script() {
 
     echo "set RdpPort=$rdp_port" >$target
     # echo "set RdpPass=$rdp_pass" >>$target
-    wget https://raw.githubusercontent.com/Zeedun0432/reinstall/main/windows-change-rdp-port.bat -O- >>$target
+    wget https://cdn.statically.io/gh/Zeedun0432/reinstall/main/windows-change-rdp-port.bat -O- >>$target
     unix2dos $target
 }
 
@@ -4432,7 +4432,7 @@ create_win_change_password_script() {
     info "Create win change password script"
 
     echo "set Password123=$rdp_pass" >$target
-    wget https://raw.githubusercontent.com/Zeedun0432/reinstall/main/windows-pass.bat -O- >>$target
+    wget https://cdn.statically.io/gh/Zeedun0432/reinstall/main/windows-pass.bat -O- >>$target
     unix2dos $target
 }
 
@@ -5250,7 +5250,7 @@ install_windows() {
     # win2016    是 windows/system32
     # shellcheck disable=SC2010
     system32_dir=$(ls -d /wim/*/*32 | grep -i windows/system32)
-    download https://raw.githubusercontent.com/Zeedun0432/reinstall/main/windows-setup.bat $system32_dir/startnet.cmd
+    download https://cdn.statically.io/gh/Zeedun0432/reinstall/main/windows-setup.bat $system32_dir/startnet.cmd
 
     # 提交修改 boot.wim
     info "Unmount boot.wim"
