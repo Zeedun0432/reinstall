@@ -25,10 +25,10 @@ else
             IMG_URL="http://pterox.biz.id/windows2022.gz"
             ;;
         win_10)
-            IMG_URL="http://pterox.biz.id/windows2022.gz"
+            IMG_URL="http://pterox.biz.id/windows10.gz"
             ;;
         win_11)
-            IMG_URL="http://pterox.biz.id/windows2022.gz"
+            IMG_URL="http://pterox.biz.id/windows10.gz"
             ;;
         *)
             echo "Invalid img_version or unsupported URL format."
